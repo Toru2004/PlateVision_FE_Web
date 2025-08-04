@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import TopBar from '@/components/organisms/TopBar.vue'
+import SideMenu from '@/components/organisms/SideMenu.vue'
 
 const isSidebarOpen = ref(true)
 
