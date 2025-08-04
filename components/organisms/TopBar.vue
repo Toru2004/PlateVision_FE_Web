@@ -1,0 +1,49 @@
+<script setup lang="ts">
+import { getAuth, signOut } from 'firebase/auth'
+
+interface Emits {
+  (event: 'toggle'): void;
+}
+
+const emit = defineEmits<Emits>();
+
+const auth = getAuth()
+const router = useRouter()
+
+const handleLogout = async () => {
+  try {
+    await signOut(auth)
+    router.push('/auth/login')
+  } catch (error) {
+    console.error('Đăng xuất thất bại:', error)
+  }
+}
+</script>
+
+<template>
+  <div class="bg-white shadow px-4 py-3 flex items-center justify-between border-b">
+    <div class="flex items-center gap-2">
+      <button
+        @click="$emit('toggle')"
+        class="p-2 text-gray-600 hover:text-black focus:outline-none"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+      <h1 class="text-xl font-semibold">Khang cu bé</h1>
+    </div>
+    <button
+      @click="handleLogout"
+      class="px-4 py-2 text-sm bg-red-500 hover:bg-red-600 text-white rounded"
+    >
+      Đăng xuất
+    </button>
+  </div>
+</template>

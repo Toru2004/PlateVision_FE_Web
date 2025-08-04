@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, type Firestore } from 'firebase/firestore'
 import UserList from '@/components/organisms/users/UserList.vue'
 
+definePageMeta({
+  layout: 'default',
+});
+
 const { $firestore } = useNuxtApp()
+const db = $firestore as Firestore
 
 const users = ref<UserRegister[]>([])
 
@@ -13,7 +18,7 @@ const fetchData = async (
 ): Promise<void> => {
   try {
     loading.value = true
-    const querySnapshot = await getDocs(collection($firestore, 'thongtindangky'))
+    const querySnapshot = await getDocs(collection(db, 'thongtindangky'))
     users.value = querySnapshot.docs.map((doc) => {
       const data = doc.data()
       return {

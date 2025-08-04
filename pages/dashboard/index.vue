@@ -1,7 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: 'default', // sử dụng layout mặc định có SideMenu
-  title: 'Dashboard',
+  layout: 'default',
 });
 </script>
 
