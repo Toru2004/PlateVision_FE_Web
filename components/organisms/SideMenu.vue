@@ -7,7 +7,7 @@ const route = useRoute();
 const menuItems = [
   { label: 'Dashboard', path: '/dashboard' },
   { label: 'Quản lý người dùng', path: '/users' },
-  { label: 'Quản lý xe', path: '/settings' },
+  { label: 'Quản lý xe', path: '/vehicles' },
   { label: 'Quản lý hoạt động bãi đỗ', path: '/settings' },
   { label: 'Quản lý gia hạn bãi đỗ xe', path: '/time_schedule' },
   { label: 'Quản lý yêu cầu', path: '/settings' },

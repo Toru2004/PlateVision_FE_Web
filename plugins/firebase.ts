@@ -1,41 +1,40 @@
-/* eslint-disable no-console */
-import { getApps, initializeApp } from 'firebase/app';
-import { getDatabase } from 'firebase/database';
-import { getStorage } from 'firebase/storage';
-import { getFirestore } from 'firebase/firestore';
-import type { FirebaseStorage } from 'firebase/storage';
-import type { FirebaseOptions } from 'firebase/app';
-import type { Firestore } from 'firebase/firestore';
+// plugins/firebase.ts
+import { getApps, initializeApp } from 'firebase/app'
+import { getFirestore } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
+import { getDatabase } from 'firebase/database'
+import { getStorage } from 'firebase/storage'
+
+import type { FirebaseApp, FirebaseOptions } from 'firebase/app'
+
+let firebaseApp: FirebaseApp
 
 export default defineNuxtPlugin((nuxtApp) => {
-  const config = useRuntimeConfig();
+  const config = useRuntimeConfig()
 
   const firebaseConfig: FirebaseOptions = {
-    apiKey: config.public.firebaseApiKey as string,
-    authDomain: config.public.firebaseAuthDomain as string,
-    databaseURL: config.public.firebaseDatabaseURL as string,
-    storageBucket: config.public.firebaseStorageBucket as string,
-    messagingSenderId: config.public.firebaseMessagingSenderId as string,
-    projectId: config.public.firebaseProjectId as string,
-    appId: config.public.firebaseAppId as string,
-    measurementId: config.public.firebaseMeasurementId as string,
-  };
-
-  const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-
-  const firebaseStorage = getStorage(app);
-  const firebaseDatabase = getDatabase(app);
-  const firestore = getFirestore(app);
-
-  nuxtApp.provide('firebaseStorage', firebaseStorage);
-  nuxtApp.provide('firebaseDatabase', firebaseDatabase);
-  nuxtApp.provide('firestore', firestore);
-});
-
-declare module 'nuxt/app' {
-  interface NuxtApp {
-    $firebaseStorage: FirebaseStorage;
-    $firebaseDatabase: ReturnType<typeof getDatabase>;
-    $firestore: Firestore;
+    apiKey: config.public.firebaseApiKey,
+    authDomain: config.public.firebaseAuthDomain,
+    projectId: config.public.firebaseProjectId,
+    storageBucket: config.public.firebaseStorageBucket,
+    messagingSenderId: config.public.firebaseMessagingSenderId,
+    appId: config.public.firebaseAppId,
+    measurementId: config.public.firebaseMeasurementId,
+    databaseURL: config.public.firebaseDatabaseURL,
   }
-}
+
+  firebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
+
+  const firestore = getFirestore(firebaseApp)
+  const auth = getAuth(firebaseApp)
+  const database = getDatabase(firebaseApp)
+  const storage = getStorage(firebaseApp)
+
+  nuxtApp.provide('firestore', firestore)
+  nuxtApp.provide('firebaseAuth', auth)
+  nuxtApp.provide('firebaseDatabase', database)
+  nuxtApp.provide('firebaseStorage', storage)
+})
+
+
+export { firebaseApp }

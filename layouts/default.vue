@@ -1,27 +1,42 @@
 <script setup lang="ts">
+import TopBar from '@/components/organisms/TopBar.vue'
 import SideMenu from '@/components/organisms/SideMenu.vue'
+
+const isSidebarOpen = ref(true)
+
+const toggleSidebar = () => {
+  isSidebarOpen.value = !isSidebarOpen.value
+}
 </script>
 
 <template>
-  <div class="flex flex-col min-h-screen">
-    <!-- Container chính có ảnh nền -->
-    <div
-      class="flex grow relative z-0 bg-no-repeat bg-cover bg-center"
-      style="background-image: url('/HLF.jpg'); background-position: 100px 100%;"
-    >
-      <!-- Lớp overlay đen mờ -->
-      <div class="absolute inset-0 bg-black/5 z-0"></div>
+  <div class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <transition name="slide">
+      <SideMenu v-if="isSidebarOpen" class="w-64 bg-gray-800 text-white" />
+    </transition>
 
-      <!-- Nội dung chính (SideMenu + NuxtPage) -->
-      <div class="flex grow relative z-10 w-full">
-        <!-- Sidebar -->
-        <SideMenu />
+    <!-- Right content -->
+    <div class="flex flex-col flex-1">
+      <!-- TopBar -->
+      <TopBar @toggle="toggleSidebar" />
 
-        <!-- Nội dung trang -->
-        <div class="flex-1 flex flex-col px-4 py-6 overflow-y-auto">
-          <NuxtPage />
-        </div>
-      </div>
+      <!-- Main content -->
+      <main class="flex-1 overflow-y-auto px-4 py-6 bg-gray-100">
+        <NuxtPage />
+      </main>
     </div>
   </div>
 </template>
+
+<style scoped>
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+</style>
