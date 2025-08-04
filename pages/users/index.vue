@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { collection, getDocs, type Firestore } from 'firebase/firestore'
 import UserList from '@/components/organisms/users/UserList.vue'
+import Loading from '@/components/atoms/Loading.vue';
 
 definePageMeta({
   layout: 'default',
@@ -44,5 +45,6 @@ onMounted(() => {
 </script>
 
 <template>
+  <Loading icon="ball-triangle" :show="loading" color="#1e40af" />
   <UserList :users="users" :loading="loading" @delete="handleClickDelete" />
 </template>
