@@ -793,6 +793,13 @@
   resolved "https://registry.npmjs.org/@kwsites/promise-deferred/-/promise-deferred-1.1.1.tgz"
   integrity sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==
 
+"@left4code/tw-starter@^3.1.35":
+  version "3.2.9"
+  resolved "https://registry.npmjs.org/@left4code/tw-starter/-/tw-starter-3.2.9.tgz"
+  integrity sha512-/GplyspCazevgf09fcGcv01HK32tgpeEoUKYI+r4DG9X/RwNeRDL2YeWJRNcWH1eEKrCg6DG/wBu7PjRQs0bKA==
+  dependencies:
+    "@left4code/tw-starter" "^3.1.35"
+
 "@mapbox/node-pre-gyp@^2.0.0":
   version "2.0.0"
   resolved "https://registry.npmjs.org/@mapbox/node-pre-gyp/-/node-pre-gyp-2.0.0.tgz"
@@ -1030,7 +1037,7 @@
     which "^5.0.0"
     ws "^8.18.3"
 
-"@nuxt/kit@^3.15.4", "@nuxt/kit@^3.16.0", "@nuxt/kit@^3.17.6", "@nuxt/kit@3.17.7":
+"@nuxt/kit@^3.0.0-rc.2", "@nuxt/kit@^3.15.4", "@nuxt/kit@^3.16.0", "@nuxt/kit@^3.17.6", "@nuxt/kit@3.17.7":
   version "3.17.7"
   resolved "https://registry.npmjs.org/@nuxt/kit/-/kit-3.17.7.tgz"
   integrity sha512-JLno3ur7Pix2o/StxIMlEHRkMawA6h7uzjZBDgxdeKXRWTYY8ID9YekSkN4PBlEFGXBfCBOcPd5+YqcyBUAMkw==
@@ -1194,6 +1201,13 @@
     "@parcel/watcher-win32-arm64" "2.5.1"
     "@parcel/watcher-win32-ia32" "2.5.1"
     "@parcel/watcher-win32-x64" "2.5.1"
+
+"@pinia/nuxt@^0.1.9":
+  version "0.1.9"
+  resolved "https://registry.npmjs.org/@pinia/nuxt/-/nuxt-0.1.9.tgz"
+  integrity sha512-5YmfBOxXHM5eA5pE4mq5opJnSmVYn2qYJ2ak01FrCww0esxfRLkmuu4emynu0Ar5eQ/DDz9wI3ukgRwAubXqmg==
+  dependencies:
+    vue-demi "*"
 
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
@@ -1584,7 +1598,7 @@
     "@vue/compiler-dom" "3.5.17"
     "@vue/shared" "3.5.17"
 
-"@vue/devtools-api@^6.6.4":
+"@vue/devtools-api@^6.6.3", "@vue/devtools-api@^6.6.4":
   version "6.6.4"
   resolved "https://registry.npmjs.org/@vue/devtools-api/-/devtools-api-6.6.4.tgz"
   integrity sha512-sGhTPMuXqZ1rVOk32RylztWkfXTRhuS7vgAKv0zjqk8gbsHkJ7xfFf+jbySxt7tWObEJwyKaHMikV/WGDiQm8g==
@@ -1658,6 +1672,38 @@
   version "3.5.17"
   resolved "https://registry.npmjs.org/@vue/shared/-/shared-3.5.17.tgz"
   integrity sha512-CabR+UN630VnsJO/jHWYBC1YVXyMq94KKp6iF5MQgZJs5I8cmjw6oVMO1oDbtBkENSHSSn/UadWlW/OAgdmKrg==
+
+"@vueuse/core@8.4.2":
+  version "8.4.2"
+  resolved "https://registry.npmjs.org/@vueuse/core/-/core-8.4.2.tgz"
+  integrity sha512-dUVU96lii1ZdWoNJXauQNt+4QrHz1DKbuW+y6pDR2N10q7rGZJMDU7pQeMcC2XeosX7kMODfaBuqsF03NozzLg==
+  dependencies:
+    "@vueuse/metadata" "8.4.2"
+    "@vueuse/shared" "8.4.2"
+    vue-demi "*"
+
+"@vueuse/metadata@8.4.2":
+  version "8.4.2"
+  resolved "https://registry.npmjs.org/@vueuse/metadata/-/metadata-8.4.2.tgz"
+  integrity sha512-2BIj++7P0/I5dfMsEe8q7Kw0HqVAjVcyNOd9+G22/ILUC9TVLTeYOuJ1kwa1Gpr+0LWKHc6GqHiLWNL33+exoQ==
+
+"@vueuse/nuxt@8.4.2":
+  version "8.4.2"
+  resolved "https://registry.npmjs.org/@vueuse/nuxt/-/nuxt-8.4.2.tgz"
+  integrity sha512-f9fEJPIl2zaNC5Dymh/M24xEWecvCJ6fC2BWzvkenSMdnBgqOgxnMxR3cxx40fnc8JDn9Z/zLTHvphq8U3H0Lg==
+  dependencies:
+    "@nuxt/kit" "^3.0.0-rc.2"
+    "@vueuse/core" "8.4.2"
+    "@vueuse/metadata" "8.4.2"
+    local-pkg "^0.4.1"
+    vue-demi "*"
+
+"@vueuse/shared@8.4.2":
+  version "8.4.2"
+  resolved "https://registry.npmjs.org/@vueuse/shared/-/shared-8.4.2.tgz"
+  integrity sha512-hILXMEjL8YQhj1LHN/HZ49UThyfk8irTjhele2nW+L3N55ElFUBGB/f4w0rg8EW+/suhqv7kJJPTZzvHCqxlIw==
+  dependencies:
+    vue-demi "*"
 
 "@whatwg-node/disposablestack@^0.0.6":
   version "0.0.6"
@@ -3076,7 +3122,7 @@ find-up@^7.0.0, find-up@7.0.0:
     path-exists "^5.0.0"
     unicorn-magic "^0.1.0"
 
-firebase@^12.0.0:
+firebase@^12.0.0, "firebase@^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0":
   version "12.0.0"
   resolved "https://registry.npmjs.org/firebase/-/firebase-12.0.0.tgz"
   integrity sha512-KV+OrMJpi2uXlqL2zaCcXb7YuQbY/gMIWT1hf8hKeTW1bSumWaHT5qfmn0WTpHwKQa3QEVOtZR2ta9EchcmYuw==
@@ -3976,6 +4022,11 @@ listhen@^1.9.0:
     untun "^0.1.3"
     uqr "^0.1.2"
 
+local-pkg@^0.4.1:
+  version "0.4.3"
+  resolved "https://registry.npmjs.org/local-pkg/-/local-pkg-0.4.3.tgz"
+  integrity sha512-SFppqq5p42fe2qcZQqqEOiVRXl+WCP1MdT6k7BDEW1j++sp5fIY+/fdRQitvKgB5BrBcmrs5m/L0v2FrU5MY1g==
+
 local-pkg@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/local-pkg/-/local-pkg-1.1.1.tgz"
@@ -4060,6 +4111,16 @@ lru-cache@^5.1.1:
   integrity sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==
   dependencies:
     yallist "^3.0.2"
+
+lucide-vue-next@^0.438.0:
+  version "0.438.0"
+  resolved "https://registry.npmjs.org/lucide-vue-next/-/lucide-vue-next-0.438.0.tgz"
+  integrity sha512-xlPIeYbhfI0gDJwolST7cjc6KAi1oWN9HEWGuK+5gMmoi+a6bJ3mI062+7tqzOdjSE07l7jyBH4mladQVLIQRA==
+
+lucide@^0.86.0:
+  version "0.86.0"
+  resolved "https://registry.npmjs.org/lucide/-/lucide-0.86.0.tgz"
+  integrity sha512-Fg33xhEgmWHec5ma7IgFUdy4j67G4ldj6fVvXbbISWz4G3EHapVf3eDBFrtGfXcv7KMrS94pIV00BAauDInXhA==
 
 luxon@^3.2.1:
   version "3.7.1"
@@ -4886,6 +4947,19 @@ pify@^2.3.0:
   version "2.3.0"
   resolved "https://registry.npmjs.org/pify/-/pify-2.3.0.tgz"
   integrity sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==
+
+pinia-plugin-persistedstate@^2.1.1:
+  version "2.4.0"
+  resolved "https://registry.npmjs.org/pinia-plugin-persistedstate/-/pinia-plugin-persistedstate-2.4.0.tgz"
+  integrity sha512-bQcpv47jk3ISl+InuJWsFaS/K7pRZ97kfoD2WCf/suhnlLy48k3BnFM2tI6YZ1xMsDaPv4yOsaPuPAUuSmEO2Q==
+
+pinia@^2.0.0, pinia@^2.0.14, pinia@>=2.0.14:
+  version "2.3.1"
+  resolved "https://registry.npmjs.org/pinia/-/pinia-2.3.1.tgz"
+  integrity sha512-khUlZSwt9xXCaTbbxFYBKDc/bWAGWJjOgvxETwkTN7KRm66EeT1ZdZj6i2ceh9sP2Pzqsbc704r2yngBrxBVug==
+  dependencies:
+    "@vue/devtools-api" "^6.6.3"
+    vue-demi "^0.14.10"
 
 pirates@^4.0.1:
   version "4.0.7"
@@ -6272,7 +6346,7 @@ type-is@^1.6.16:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
-typescript@*, typescript@^5.4.4, typescript@^5.7.3, typescript@>=4.8.4, "typescript@>=4.8.4 <5.9.0":
+typescript@*, typescript@^5.4.4, typescript@^5.7.3, typescript@>=4.4.4, typescript@>=4.8.4, "typescript@>=4.8.4 <5.9.0":
   version "5.8.3"
   resolved "https://registry.npmjs.org/typescript/-/typescript-5.8.3.tgz"
   integrity sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==
@@ -6614,6 +6688,11 @@ vue-bundle-renderer@^2.1.1:
   dependencies:
     ufo "^1.5.4"
 
+vue-demi@*, vue-demi@^0.14.10, vue-demi@latest:
+  version "0.14.10"
+  resolved "https://registry.npmjs.org/vue-demi/-/vue-demi-0.14.10.tgz"
+  integrity sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==
+
 vue-devtools-stub@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/vue-devtools-stub/-/vue-devtools-stub-0.1.0.tgz"
@@ -6626,7 +6705,7 @@ vue-router@^4.5.1:
   dependencies:
     "@vue/devtools-api" "^6.6.4"
 
-"vue@^2.7.0 || ^3.2.25", vue@^3.0.0, vue@^3.2.0, vue@^3.2.25, vue@^3.3.4, vue@^3.5.0, vue@^3.5.17, vue@>=3.5.13, vue@3.5.17:
+"vue@^2.6.0 || ^3.2.0", "vue@^2.7.0 || ^3.2.0", "vue@^2.7.0 || ^3.2.25", "vue@^2.7.0 || ^3.5.11", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", vue@^3.2.0, vue@^3.2.25, vue@^3.3.4, vue@^3.5.0, vue@^3.5.17, vue@>=3.0.1, vue@>=3.2.0, vue@>=3.5.13, vue@3.5.17:
   version "3.5.17"
   resolved "https://registry.npmjs.org/vue/-/vue-3.5.17.tgz"
   integrity sha512-LbHV3xPN9BeljML+Xctq4lbz2lVHCR6DtbpTf5XIO6gugpXUN49j2QQPcMj086r9+AkJ0FfUT8xjulKKBkkr9g==
@@ -6636,6 +6715,18 @@ vue-router@^4.5.1:
     "@vue/runtime-dom" "3.5.17"
     "@vue/server-renderer" "3.5.17"
     "@vue/shared" "3.5.17"
+
+vue3-toastify@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.npmjs.org/vue3-toastify/-/vue3-toastify-0.2.8.tgz"
+  integrity sha512-8jDOqsJaBZEbGpCbhWDETJc11D1lZefvgFPq/IPdM+U7+qyXoVPDvK6uq/FIgyV7qV0NcNzvGBMEzjsLQqGROw==
+
+vuefire@^3.0.0:
+  version "3.2.2"
+  resolved "https://registry.npmjs.org/vuefire/-/vuefire-3.2.2.tgz"
+  integrity sha512-JARgY9HhLs7xrdotQ4QA1SAmFDfSvAwUmOjx9e9lRJnmrsSW7H8ddfCQTVEHhU5NPyPJ/qKBv18Y5N13L60TGg==
+  dependencies:
+    vue-demi latest
 
 web-streams-polyfill@^3.0.3:
   version "3.3.3"
