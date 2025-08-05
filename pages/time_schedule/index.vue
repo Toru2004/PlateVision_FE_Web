@@ -12,11 +12,12 @@
 </template>
 
 <script setup lang="ts">
-import { doc, getDoc, updateDoc, Timestamp } from "firebase/firestore";
+import { doc, getDoc, updateDoc, Timestamp, type Firestore } from "firebase/firestore";
 import ScheduleOptions from "@/components/organisms/time_schedule/ScheduleOptions.vue";
 import { toast } from 'vue3-toastify'
 
 const { $firestore } = useNuxtApp();
+const db = $firestore as Firestore
 
 const giaHan = ref(false);
 const selectedOption = ref<'gio' | 'ngay'>('gio');
@@ -34,7 +35,7 @@ const gioiHanNgay = ref<Timestamp>(getMidnightToday());
 const fetchRule = async () => {
   try {
     isLoading.value = true;
-    const docRef = doc($firestore, "quydinh", "PnKy43d1MPcSHiotg8Cz");
+    const docRef = doc(db, "quydinh", "PnKy43d1MPcSHiotg8Cz");
     const docSnap = await getDoc(docRef);
     const data = docSnap.data();
 
@@ -58,7 +59,7 @@ const fetchRule = async () => {
 // Gửi dữ liệu lên Firestore
 const saveChanges = async () => {
   try {
-    const docRef = doc($firestore, "quydinh", "PnKy43d1MPcSHiotg8Cz");
+    const docRef = doc(db, "quydinh", "PnKy43d1MPcSHiotg8Cz");
 
     const dataToUpdate: any = {
       giahan: giaHan.value,
