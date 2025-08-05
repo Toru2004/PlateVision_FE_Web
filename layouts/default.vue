@@ -7,7 +7,6 @@ import SideMenu from '@/components/organisms/SideMenu.vue';
     <div class="flex grow">
       <!-- Sidebar -->
       <SideMenu />
-
       <!-- Main content -->
       <div class="flex-1 flex flex-col px-4 py-6 overflow-y-auto">
         <NuxtPage />
