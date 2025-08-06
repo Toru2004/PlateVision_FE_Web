@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { doc, getDoc, updateDoc, Timestamp, type Firestore } from "firebase/firestore";
-import ScheduleOptions from "@/components/organisms/time_schedule/ScheduleOptions.vue";
+import ScheduleOptions from "@/components/organisms/timeSchedule/ScheduleOptions.vue";
 import { toast } from "vue3-toastify";
 
 const { $firestore } = useNuxtApp();
