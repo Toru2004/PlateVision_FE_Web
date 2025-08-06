@@ -10,7 +10,7 @@ const menuItems = [
   { label: 'Quản lý xe', path: '/vehicles' },
   { label: 'Quản lý hoạt động bãi đỗ', path: '/settings' },
   { label: 'Quản lý gia hạn bãi đỗ xe', path: '/time_schedule' },
-  { label: 'Quản lý yêu cầu', path: '/settings' },
+  { label: 'Quản lý yêu cầu', path: '/managerRequest' },
 ];
 
 const isActive = (path: string) => route.path.startsWith(path);
