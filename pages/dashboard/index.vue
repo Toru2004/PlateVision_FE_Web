@@ -109,7 +109,11 @@ async function setupRealtimeListener() {
 function listenSoNguoiDangKy() {
   const refDangKy = collection(db, 'thongtindangky')
   const unsub = onSnapshot(refDangKy, (snapshot) => {
-    soNguoiDangKy.value = snapshot.size
+    const users = snapshot.docs.filter(doc => {
+      const data = doc.data()
+      return data.role !== 'admin'
+    })
+    soNguoiDangKy.value = users.length
   })
   unsubscribeListeners.push(unsub)
 }
