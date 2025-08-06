@@ -8,6 +8,7 @@ import {
 } from 'firebase/firestore'
 import { firebaseApp } from '@/plugins/firebase'
 import Infomation from '@/components/organisms/dashboard/Infomation.vue'
+import { getDatabase, ref as rtdbRef, onValue, off } from 'firebase/database'
 
 const db = getFirestore(firebaseApp)
 const xeHienTai = ref<number>(0)
@@ -16,6 +17,7 @@ const soNguoiDangKy = ref<number>(0)
 const tongYeuCau = ref<number>(0)
 const tongLuotCongHoatDong = ref<number>(0)
 const unsubscribeXeListeners: (() => void)[] = []
+const trangThaiCong = ref<boolean | null>(null)
 
 const lastXeHienTai = ref<number | null>(null)
 const lastXeRaVaoHomNay = ref<number | null>(null)
@@ -191,11 +193,24 @@ async function recomputeTongLuotCongHoatDong() {
   tongLuotCongHoatDong.value = total
 }
 
+function listenTrangThaiCong() {
+  const db = getDatabase()
+  const congRef = rtdbRef(db, 'trangthaicong')
+
+  const unsub = onValue(congRef, (snapshot) => {
+    trangThaiCong.value = snapshot.val()
+  })
+
+  // Push vào danh sách để unmount xóa listener nếu cần
+  unsubscribeListeners.push(() => off(congRef))
+}
+
 onMounted(() => {
   setupRealtimeListener()
   listenSoNguoiDangKy()
   listenTongYeuCau()
   listenTongLuotCongHoatDongRealtime()
+  listenTrangThaiCong()
 })
 
 onUnmounted(() => {
@@ -211,5 +226,5 @@ definePageMeta({
 <template>
   <Infomation :xeHienTai="xeHienTai" :deltaXeHienTai="deltaXeHienTai" :xeRaVaoHomNay="xeRaVaoHomNay"
     :deltaXeRaVao="deltaXeRaVao" :soNguoiDangKy="soNguoiDangKy" :tongYeuCau="tongYeuCau" :deltaYeuCau="deltaYeuCau"
-    :tongLuotCongHoatDong="tongLuotCongHoatDong" />
+    :tongLuotCongHoatDong="tongLuotCongHoatDong" :trangThaiCong="trangThaiCong" />
 </template>
