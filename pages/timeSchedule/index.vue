@@ -1,14 +1,8 @@
 <template>
-    <ScheduleOptions
-        :isLoading="isLoading"
-        :giaHan="giaHan"
-        :selectedOption="selectedOption"
-        :gioiHanGio="gioiHanGio"
-        :gioiHanNgay="gioiHanNgay"
-        @update:giaHan="(v) => (giaHan = v)"
-        @update:selectedOption="(v) => (selectedOption = v)"
-        @update:save="saveChanges"
-    />
+    <ScheduleOptions :isLoading="isLoading" :giaHan="giaHan" :selectedOption="selectedOption" :gioiHanGio="gioiHanGio"
+        :gioiHanNgay="gioiHanNgay" :ghiChu="ghiChu" @update:giaHan="(v) => (giaHan = v)"
+        @update:selectedOption="(v) => (selectedOption = v)" @update:ghiChu="(v: string) => (ghiChu = v)"
+        @update:save="saveChanges" />
 </template>
 
 <script setup lang="ts">
@@ -22,6 +16,7 @@ const db = $firestore as Firestore;
 const giaHan = ref(false);
 const selectedOption = ref<"gio" | "ngay">("gio");
 const isLoading = ref(true);
+const ghiChu = ref("");
 
 const getMidnightToday = (): Timestamp => {
     const now = new Date();
@@ -49,6 +44,7 @@ const fetchRule = async () => {
 
         gioiHanGio.value = data?.gioihangio ?? 24;
         gioiHanNgay.value = data?.gioihanngay ?? getMidnightToday();
+        ghiChu.value = data?.ghichu ?? "";
     } catch (err) {
         console.error("Lỗi khi fetch quy định:", err);
     } finally {
@@ -63,6 +59,7 @@ const saveChanges = async () => {
 
         const dataToUpdate: any = {
             giahan: giaHan.value,
+            ghichu: ghiChu.value,
         };
 
         if (giaHan.value) {

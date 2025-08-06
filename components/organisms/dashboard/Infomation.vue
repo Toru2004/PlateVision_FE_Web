@@ -7,6 +7,8 @@ defineProps<{
     soNguoiDangKy: number
     tongYeuCau: number
     deltaYeuCau: number
+    tongLuotCongHoatDong: number
+    trangThaiCong: boolean | null
 }>()
 </script>
 
@@ -46,6 +48,32 @@ defineProps<{
                     <span v-if="deltaYeuCau > 0"> ({{ deltaYeuCau }} mới)</span>
                 </p>
                 <p class="text-2xl font-bold text-red-600 mt-2">{{ tongYeuCau }}</p>
+            </div>
+
+            <!-- Card 5: Tổng số lần cổng hoạt động -->
+            <div class="bg-white p-4 rounded-xl shadow hover:shadow-md transition">
+                <p class="text-gray-500 text-sm">
+                    Tổng số lần mở cổng
+                </p>
+                <p class="text-2xl font-bold text-red-600 mt-2">{{ tongLuotCongHoatDong }}</p>
+            </div>
+
+            <!-- Card 6: Trạng thái cổng -->
+            <div class="bg-white p-4 rounded-xl shadow hover:shadow-md transition">
+                <p class="text-gray-500 text-sm">Trạng thái cổng</p>
+                <p class="text-2xl font-bold mt-2" :class="{
+                    'text-green-600': trangThaiCong === true,
+                    'text-red-600': trangThaiCong === false,
+                    'text-gray-400': trangThaiCong === null
+                }">
+                    {{
+                        trangThaiCong === null
+                            ? 'Không xác định'
+                            : trangThaiCong
+                    ? 'Đang mở'
+                    : 'Đang đóng'
+                    }}
+                </p>
             </div>
         </div>
 
