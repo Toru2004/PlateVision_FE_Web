@@ -14,6 +14,8 @@ const xeHienTai = ref<number>(0)
 const xeRaVaoHomNay = ref<number>(0)
 const soNguoiDangKy = ref<number>(0)
 const tongYeuCau = ref<number>(0)
+const tongLuotCongHoatDong = ref<number>(0)
+const unsubscribeXeListeners: (() => void)[] = []
 
 const lastXeHienTai = ref<number | null>(null)
 const lastXeRaVaoHomNay = ref<number | null>(null)
@@ -130,14 +132,75 @@ function listenTongYeuCau() {
   unsubscribeListeners.push(unsub)
 }
 
+async function listenTongLuotCongHoatDongRealtime() {
+  const lichSuRef = collection(db, 'lichsuhoatdong')
+
+  // Lắng nghe tất cả ngày
+  const unsubLichSu = onSnapshot(lichSuRef, (ngaySnapshot) => {
+    // Hủy đăng ký cũ để tránh leak
+    unsubscribeXeListeners.forEach(unsub => unsub())
+    unsubscribeXeListeners.length = 0
+
+    // Duyệt qua từng ngày
+    ngaySnapshot.docs.forEach((ngayDoc) => {
+      const ngayId = ngayDoc.id
+      const xeRef = collection(db, 'lichsuhoatdong', ngayId, 'xe')
+
+      // Lắng nghe từng collection 'xe' của ngày
+      const unsubXe = onSnapshot(xeRef, (xeSnapshot) => {
+        let total = 0
+        xeSnapshot.docs.forEach((xeDoc) => {
+          const data = xeDoc.data()
+          const vao = data.solanvao || 0
+          const ra = data.solanra || 0
+          total += vao + ra
+        })
+
+        // Vì bạn lắng nghe theo từng ngày, bạn cần cộng dồn theo nhiều ngày
+        // => Giải pháp đơn giản: gom toàn bộ số ngày rồi tính tổng
+        recomputeTongLuotCongHoatDong()
+      })
+
+      unsubscribeXeListeners.push(unsubXe)
+    })
+  })
+
+  unsubscribeListeners.push(unsubLichSu)
+}
+
+// Gom lại toàn bộ lượt cổng từ các ngày và xe
+async function recomputeTongLuotCongHoatDong() {
+  const lichSuRef = collection(db, 'lichsuhoatdong')
+  const lichSuDocs = await getDocs(lichSuRef)
+
+  let total = 0
+
+  for (const ngayDoc of lichSuDocs.docs) {
+    const ngayId = ngayDoc.id
+    const xeRef = collection(db, 'lichsuhoatdong', ngayId, 'xe')
+    const xeDocs = await getDocs(xeRef)
+
+    for (const xeDoc of xeDocs.docs) {
+      const data = xeDoc.data()
+      const vao = data.solanvao || 0
+      const ra = data.solanra || 0
+      total += vao + ra
+    }
+  }
+
+  tongLuotCongHoatDong.value = total
+}
+
 onMounted(() => {
   setupRealtimeListener()
   listenSoNguoiDangKy()
   listenTongYeuCau()
+  listenTongLuotCongHoatDongRealtime()
 })
 
 onUnmounted(() => {
   unsubscribeListeners.forEach((unsub) => unsub())
+  unsubscribeXeListeners.forEach((unsub) => unsub())
 })
 
 definePageMeta({
@@ -147,5 +210,6 @@ definePageMeta({
 
 <template>
   <Infomation :xeHienTai="xeHienTai" :deltaXeHienTai="deltaXeHienTai" :xeRaVaoHomNay="xeRaVaoHomNay"
-    :deltaXeRaVao="deltaXeRaVao" :soNguoiDangKy="soNguoiDangKy" :tongYeuCau="tongYeuCau" :deltaYeuCau="deltaYeuCau" />
+    :deltaXeRaVao="deltaXeRaVao" :soNguoiDangKy="soNguoiDangKy" :tongYeuCau="tongYeuCau" :deltaYeuCau="deltaYeuCau"
+    :tongLuotCongHoatDong="tongLuotCongHoatDong" />
 </template>
