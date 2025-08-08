@@ -10,10 +10,7 @@ export function searchByKeyword<T>(
   return data.filter((item) =>
     fields.some((field) => {
       const value = item[field];
-      return (
-        typeof value === 'string' &&
-        value.toLowerCase().includes(lowerKeyword)
-      );
+      return value?.toString().toLowerCase().includes(lowerKeyword);
     })
   );
 }
