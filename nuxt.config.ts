@@ -12,6 +12,7 @@ export default defineNuxtConfig({
       firebaseProjectId: process.env.FIREBASE_PROJECT_ID || '',
       firebaseAppId: process.env.FIREBASE_APP_ID || '',
       firebaseMeasurementId: process.env.FIREBASE_MEASUREMENT_ID || '',
+      firebaseVapidKey: process.env.NUXT_PUBLIC_FIREBASE_VAPID_KEY || '',
     },
   },
 
