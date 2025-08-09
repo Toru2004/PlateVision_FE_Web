@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { addDoc, collection, doc, getDocs, type Firestore } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, setDoc, type Firestore } from "firebase/firestore";
 import UserList from "@/components/organisms/users/UserList.vue";
 import Loading from "@/components/atoms/Loading.vue";
 import FormAddUser from "@/components/organisms/users/FormAddUser.vue";
+import FormAddAdminSecurity from "@/components/organisms/users/FormAddAdminSecurity.vue";
 import { toast } from "vue3-toastify";
 definePageMeta({
     layout: "default",
@@ -15,7 +16,8 @@ const users = ref<UserRegister[]>([]);
 
 // const users = ref<{ biensoxe: string; email: string; cccd: string }[]>([])
 const loading = ref(false);
-const isModalOpen = ref(false);
+const isOpenAddAdminSecurityModal = ref(false);
+const isOpenAddUserModal = ref(false);
 
 const fetchData = async (): Promise<void> => {
     try {
@@ -48,11 +50,55 @@ const handleClickDelete = (selectedId: string): void => {
     console.log("Minh cu bé");
 };
 
-const handleCreateUser = async (newUser: UserRegister) => {
+const handleOpenAddAdminSecurityModal = (): void => {
+    isOpenAddAdminSecurityModal.value = true;
+};
+
+const handleOpenAddUserModal = (): void => {
+    isOpenAddUserModal.value = true;
+};
+
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+const handleCreateUser = async (newUser: UserCreate) => {
     try {
         loading.value = true;
+
+        //Tạo user trong Firebase Authentication
+        const auth = getAuth();
+        const userCredential = await createUserWithEmailAndPassword(auth, newUser.email, newUser.password);
+
+        const uid = userCredential.user.uid;
+        const { password, ...userData } = newUser;
+
+        //Lưu thông tin vào Firestore (dùng uid làm document ID)
+        const docRef = await setDoc(doc(db, "thongtindangky", uid), {
+            ...userData,
+        });
+
+        //Cập nhật state/UI
+        console.log("User mới:", newUser);
+        users.value.push({ ...newUser });
+        toast.success("Đã thêm thành công");
+    } catch (err: any) {
+        console.error("Lỗi khi tạo user:", err);
+        toast.error(err.message || "Thêm thất bại");
+    } finally {
+        loading.value = false;
+    }
+};
+
+const handleCreateAdminSecurity = async (newUser: UserCreate) => {
+    try {
+        loading.value = true;
+        //Tạo user trong Firebase Authentication
+        const auth = getAuth();
+        const userCredential = await createUserWithEmailAndPassword(auth, newUser.email, newUser.password);
+
+        const uid = userCredential.user.uid;
+        const { password, ...userData } = newUser;
         const docRef = await addDoc(collection(db, "thongtindangky"), {
-            ...newUser,
+            ...userData,
         });
         if (docRef && docRef.id) {
             console.log("User mới:", newUser);
@@ -76,6 +122,17 @@ onMounted(() => {
 
 <template>
     <Loading icon="ball-triangle" :show="loading" color="#1e40af" />
-    <UserList :users="users" :loading="loading" @delete="handleClickDelete" v-model:isModalOpen="isModalOpen" />
-    <FormAddUser v-model:isModalOpen="isModalOpen" v-model:loading="loading" @create="handleCreateUser" />
+    <UserList
+        :users="users"
+        :loading="loading"
+        @delete="handleClickDelete"
+        @open-add-user-modal="handleOpenAddUserModal"
+        @open-add-admin-security-modal="handleOpenAddAdminSecurityModal"
+    />
+    <FormAddUser v-model:isModalOpen="isOpenAddUserModal" v-model:loading="loading" @create="handleCreateUser" />
+    <FormAddAdminSecurity
+        v-model:isModalOpen="isOpenAddAdminSecurityModal"
+        v-model:loading="loading"
+        @create="handleCreateAdminSecurity"
+    />
 </template>

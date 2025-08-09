@@ -31,7 +31,7 @@ const handleLogin = async () => {
         }
 
         // 🔍 Truy vấn Firestore theo email
-        const q = query(collection(firestore, "thongtindangky"), where("email", "==", user.email));
+        const q = query(collection(firestore, "thongtinadmin"), where("email", "==", user.email));
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
@@ -40,7 +40,7 @@ const handleLogin = async () => {
         }
 
         const userData = querySnapshot.docs[0].data();
-        const role = userData.role;
+        // const role = userData.role;
         const { $firestore } = useNuxtApp();
         const db = $firestore as Firestore;
         const addFCMToken = async (fcmToken: string) => {
@@ -50,7 +50,7 @@ const handleLogin = async () => {
                 if (!user) {
                     return;
                 }
-                const docRef = await getDoc(doc(db, "thongtindangky", user.uid));
+                const docRef = await getDoc(doc(db, "thongtinadmin", user.uid));
                 if (docRef.exists()) {
                     const data = docRef.data();
                     const fcmTokens = data.fcmTokens ?? [];
@@ -68,7 +68,7 @@ const handleLogin = async () => {
             }
         };
         // ✅ Điều hướng theo role
-        if (role === "admin") {
+        if (userData != null) {
             const config = useRuntimeConfig();
 
             try {

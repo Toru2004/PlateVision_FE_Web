@@ -6,7 +6,8 @@ interface Props {
 
 interface Emits {
     (event: "delete", selectedId: string): void;
-    (event: "update:isModalOpen", value: boolean): void;
+    (event: "open-add-user-modal"): void;
+    (event: "open-add-admin-security-modal"): void;
 }
 
 const props = defineProps<Props>();
@@ -28,8 +29,12 @@ const filteredUsers = computed(() => {
     );
 });
 
-const handleAdd = () => {
-    emit("update:isModalOpen", true);
+const handleOpenAddUserModal = () => {
+    emit("open-add-user-modal");
+};
+
+const handleOpenAddAdminSecurityModal = () => {
+    emit("open-add-admin-security-modal");
 };
 </script>
 
@@ -39,7 +44,15 @@ const handleAdd = () => {
             <h1 class="text-2xl font-bold">Danh sách đăng ký</h1>
 
             <div class="flex items-center space-x-2">
-                <button @click="handleAdd" class="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600">Thêm mới</button>
+                <button @click="handleOpenAddUserModal" class="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600">
+                    Thêm người dùng
+                </button>
+                <button
+                    @click="handleOpenAddAdminSecurityModal"
+                    class="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
+                >
+                    Thêm bảo vệ
+                </button>
                 <input
                     v-model="searchQuery"
                     type="text"

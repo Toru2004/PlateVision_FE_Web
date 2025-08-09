@@ -20,7 +20,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     try {
         // Truy vấn tài khoản theo email
-        const q = query(collection(db, "thongtindangky"), where("email", "==", user.email || ""));
+        const q = query(collection(db, "thongtinadmin"), where("email", "==", user.email || ""));
         const snapshot = await getDocs(q);
 
         if (snapshot.empty) {
@@ -32,12 +32,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
         // Điều hướng theo role (nếu đang ở trang root '/')
         if (to.path === "/") {
-            switch (role) {
-                case "admin":
-                    return navigateTo("/dashboard");
-                default:
-                    return navigateTo("/welcome"); // hoặc route nào khác phù hợp
-            }
+            return navigateTo("/dashboard");
+            // switch (role) {
+            //     case "admin":
+            //         return navigateTo("/dashboard");
+            //     default:
+            //         return navigateTo("/welcome"); // hoặc route nào khác phù hợp
+            // }
         }
     } catch (error) {
         console.error("Middleware error:", error);
