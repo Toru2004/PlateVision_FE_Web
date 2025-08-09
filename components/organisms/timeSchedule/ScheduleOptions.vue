@@ -12,6 +12,7 @@ interface Props {
 
 const props = defineProps<Props>();
 const showConfirmModal = ref(false);
+const isEditingNote = ref(false);
 
 const confirmSave = () => {
     showConfirmModal.value = true;
@@ -20,6 +21,7 @@ const confirmSave = () => {
 const handleConfirm = () => {
     emit("update:save");
     showConfirmModal.value = false;
+    isEditingNote.value = false; // reset lại chế độ chỉnh sửa
 };
 
 const handleCancel = () => {
@@ -68,9 +70,16 @@ const emit = defineEmits<{
 
             <!-- Ghi chú gia hạn -->
             <div class="space-y-1">
-                <label for="ghiChu" class="font-semibold block">Chỉnh sửa ghi chú gia hạn:</label>
-                <textarea id="ghiChu" rows="3" class="w-full p-2 border rounded resize-none" :value="props.ghiChu"
-                    @input="emit('update:ghiChu', ($event.target as HTMLTextAreaElement).value)"
+                <div class="flex items-center space-x-2">
+                    <label for="ghiChu" class="font-semibold">Chỉnh sửa ghi chú gia hạn:</label>
+                    <button type="button" @click="isEditingNote = !isEditingNote"
+                        class="text-blue-500 hover:text-blue-700" title="Chỉnh sửa">
+                        ✏️ (Chạm để chỉnh sửa)
+                    </button>
+                </div>
+                <textarea id="ghiChu" rows="3" class="w-full p-2 border rounded resize-none"
+                    :class="{ 'bg-gray-100 text-gray-500': !isEditingNote }" :readonly="!isEditingNote"
+                    :value="props.ghiChu" @input="emit('update:ghiChu', ($event.target as HTMLTextAreaElement).value)"
                     placeholder="Nhập ghi chú liên quan đến gia hạn lịch hẹn..."></textarea>
             </div>
 
@@ -80,6 +89,7 @@ const emit = defineEmits<{
             </button>
         </div>
     </div>
+
     <!-- Modal xác nhận -->
     <div v-if="showConfirmModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
         <div class="bg-white p-6 rounded shadow-lg w-full max-w-md">
