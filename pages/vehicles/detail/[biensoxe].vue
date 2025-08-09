@@ -21,7 +21,7 @@
             <div v-if="loading" class="text-gray-600 italic">
             Đang tải danh sách ngày hoạt động...
             </div>
-
+            <div v-else-if="dates.length===0" class="text-gray-600 italic">Không tìm thấy dữ liệu hoạt động ngày</div>
             <!-- Danh sách ngày -->
             <div v-else class="flex flex-wrap gap-3">
             <button
