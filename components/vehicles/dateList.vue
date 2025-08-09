@@ -1,19 +1,18 @@
 <template>
-    <div>
-    </div>
+    <div></div>
 </template>
 
-<script  lang="ts">
-import { ref,onMounted } from 'vue';
-import { getFirestore,getDocs,collection } from 'firebase/firestore';
-const db = getFirestore();
-export function useDateList(){
+<script lang="ts">
+import { ref, onMounted } from "vue";
+import { getFirestore, getDocs, collection, Firestore } from "firebase/firestore";
+import { firebaseApp } from "@/plugins/firebase";
+export function useDateList(db: Firestore) {
     const dates = ref<string[]>([]);
-    const loading =ref(true);
-    
-    const fetchDatas= async()=>{
-        const dateSnapshot=await getDocs(collection(db, 'lichsuhoatdong'));
-        dates.value = dateSnapshot.docs.map(doc => doc.id);
+    const loading = ref(true);
+
+    const fetchDatas = async () => {
+        const dateSnapshot = await getDocs(collection(db, "lichsuhoatdong"));
+        dates.value = dateSnapshot.docs.map((doc) => doc.id);
         loading.value = false;
     };
 
@@ -22,11 +21,9 @@ export function useDateList(){
     });
     return {
         dates,
-        loading
+        loading,
     };
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
