@@ -1,5 +1,5 @@
 
-
+//pubic/firebase-messaging-sw.js
 importScripts("https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/10.12.1/firebase-messaging-compat.js");
 
@@ -24,7 +24,7 @@ messaging.onBackgroundMessage(function (payload) {
   const notificationTitle = payload.notification?.title || "Thông báo";
   const notificationOptions = {
     body: payload.notification?.body || "Bạn có thông báo mới.",
-    icon: "favicon.icon" 
+    icon: "favicon.icon"
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);

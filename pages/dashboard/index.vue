@@ -1,230 +1,233 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import {
-  collection,
-  getFirestore,
-  getDocs,
-  onSnapshot
-} from 'firebase/firestore'
-import { firebaseApp } from '@/plugins/firebase'
-import Infomation from '@/components/organisms/dashboard/Infomation.vue'
-import { getDatabase, ref as rtdbRef, onValue, off } from 'firebase/database'
+import { ref, onMounted, onUnmounted } from "vue";
+import { collection, getFirestore, getDocs, onSnapshot } from "firebase/firestore";
+import { firebaseApp } from "@/plugins/0.firebase.client";
+import Infomation from "@/components/organisms/dashboard/Infomation.vue";
+import { getDatabase, ref as rtdbRef, onValue, off } from "firebase/database";
 
-const db = getFirestore(firebaseApp)
-const xeHienTai = ref<number>(0)
-const xeRaVaoHomNay = ref<number>(0)
-const soNguoiDangKy = ref<number>(0)
-const tongYeuCau = ref<number>(0)
-const tongLuotCongHoatDong = ref<number>(0)
-const unsubscribeXeListeners: (() => void)[] = []
-const trangThaiCong = ref<boolean | null>(null)
+const db = getFirestore(firebaseApp);
+const xeHienTai = ref<number>(0);
+const xeRaVaoHomNay = ref<number>(0);
+const soNguoiDangKy = ref<number>(0);
+const tongYeuCau = ref<number>(0);
+const tongLuotCongHoatDong = ref<number>(0);
+const unsubscribeXeListeners: (() => void)[] = [];
+const trangThaiCong = ref<boolean | null>(null);
 
-const lastXeHienTai = ref<number | null>(null)
-const lastXeRaVaoHomNay = ref<number | null>(null)
-const lastTongYeuCau = ref<number | null>(null)
+const lastXeHienTai = ref<number | null>(null);
+const lastXeRaVaoHomNay = ref<number | null>(null);
+const lastTongYeuCau = ref<number | null>(null);
 
-const deltaXeHienTai = ref<number>(0)
-const deltaXeRaVao = ref<number>(0)
-const deltaYeuCau = ref<number>(0)
+const deltaXeHienTai = ref<number>(0);
+const deltaXeRaVao = ref<number>(0);
+const deltaYeuCau = ref<number>(0);
 
-let unsubscribeListeners: (() => void)[] = []
+let unsubscribeListeners: (() => void)[] = [];
 
 // Hàm lấy ngày hôm nay dạng "ddMMyyyy"
 function getTodayId(): string {
-  const today = new Date()
-  const dd = String(today.getDate()).padStart(2, '0')
-  const mm = String(today.getMonth() + 1).padStart(2, '0') // Tháng bắt đầu từ 0
-  const yyyy = today.getFullYear()
-  return `${dd}${mm}${yyyy}`
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); // Tháng bắt đầu từ 0
+    const yyyy = today.getFullYear();
+    return `${dd}${mm}${yyyy}`;
 }
 
 // Hàm đếm xe đang gửi hôm nay
 async function fetchAndUpdateXeCount() {
-  const lichSuRef = collection(db, 'lichsuhoatdong')
-  const lichSuDocs = await getDocs(lichSuRef)
+    const lichSuRef = collection(db, "lichsuhoatdong");
+    const lichSuDocs = await getDocs(lichSuRef);
 
-  const bienSoMap = new Map<string, { solanvao: number, solanra: number }>()
-  const ngayHomNay = getTodayId()
-  let demRaVaoHomNay = 0
+    const bienSoMap = new Map<string, { solanvao: number; solanra: number }>();
+    const ngayHomNay = getTodayId();
+    let demRaVaoHomNay = 0;
 
-  for (const ngayDoc of lichSuDocs.docs) {
-    const ngayId = ngayDoc.id
-    const xeRef = collection(db, 'lichsuhoatdong', ngayId, 'xe')
-    const xeDocs = await getDocs(xeRef)
+    for (const ngayDoc of lichSuDocs.docs) {
+        const ngayId = ngayDoc.id;
+        const xeRef = collection(db, "lichsuhoatdong", ngayId, "xe");
+        const xeDocs = await getDocs(xeRef);
 
-    for (const xeDoc of xeDocs.docs) {
-      const bienSo = xeDoc.id
-      const data = xeDoc.data()
+        for (const xeDoc of xeDocs.docs) {
+            const bienSo = xeDoc.id;
+            const data = xeDoc.data();
 
-      const vao = data.solanvao || 0
-      const ra = data.solanra || 0
+            const vao = data.solanvao || 0;
+            const ra = data.solanra || 0;
 
-      // Cộng dồn số lần vào ra theo từng ngày
-      if (bienSoMap.has(bienSo)) {
-        const current = bienSoMap.get(bienSo)!
-        bienSoMap.set(bienSo, {
-          solanvao: current.solanvao + vao,
-          solanra: current.solanra + ra,
-        })
-      } else {
-        bienSoMap.set(bienSo, {
-          solanvao: vao,
-          solanra: ra,
-        })
-      }
-      // Nếu ngày hiện tại và xe có hoạt động → đếm vào thống kê hôm nay
-      if (ngayId === ngayHomNay && (vao > 0 || ra > 0)) {
-        demRaVaoHomNay++
-      }
+            // Cộng dồn số lần vào ra theo từng ngày
+            if (bienSoMap.has(bienSo)) {
+                const current = bienSoMap.get(bienSo)!;
+                bienSoMap.set(bienSo, {
+                    solanvao: current.solanvao + vao,
+                    solanra: current.solanra + ra,
+                });
+            } else {
+                bienSoMap.set(bienSo, {
+                    solanvao: vao,
+                    solanra: ra,
+                });
+            }
+            // Nếu ngày hiện tại và xe có hoạt động → đếm vào thống kê hôm nay
+            if (ngayId === ngayHomNay && (vao > 0 || ra > 0)) {
+                demRaVaoHomNay++;
+            }
+        }
     }
-  }
 
-  let count = 0
-  for (const { solanvao, solanra } of bienSoMap.values()) {
-    if (solanvao > solanra) {
-      count++
+    let count = 0;
+    for (const { solanvao, solanra } of bienSoMap.values()) {
+        if (solanvao > solanra) {
+            count++;
+        }
     }
-  }
 
-  deltaXeHienTai.value = lastXeHienTai.value !== null ? count - lastXeHienTai.value : 0
-  deltaXeRaVao.value = lastXeRaVaoHomNay.value !== null ? demRaVaoHomNay - lastXeRaVaoHomNay.value : 0
+    deltaXeHienTai.value = lastXeHienTai.value !== null ? count - lastXeHienTai.value : 0;
+    deltaXeRaVao.value = lastXeRaVaoHomNay.value !== null ? demRaVaoHomNay - lastXeRaVaoHomNay.value : 0;
 
-  lastXeHienTai.value = count
-  lastXeRaVaoHomNay.value = demRaVaoHomNay
+    lastXeHienTai.value = count;
+    lastXeRaVaoHomNay.value = demRaVaoHomNay;
 
-  xeHienTai.value = count
-  xeRaVaoHomNay.value = demRaVaoHomNay
+    xeHienTai.value = count;
+    xeRaVaoHomNay.value = demRaVaoHomNay;
 }
 
 // Lắng nghe thay đổi trong timeline của từng xe trong ngày hôm nay
 async function setupRealtimeListener() {
-  const ngayId = getTodayId()
-  const xeRef = collection(db, 'lichsuhoatdong', ngayId, 'xe')
+    const ngayId = getTodayId();
+    const xeRef = collection(db, "lichsuhoatdong", ngayId, "xe");
 
-  const unsub = onSnapshot(xeRef, async () => {
-    await fetchAndUpdateXeCount()
-  })
+    const unsub = onSnapshot(xeRef, async () => {
+        await fetchAndUpdateXeCount();
+    });
 
-  unsubscribeListeners.push(unsub)
+    unsubscribeListeners.push(unsub);
 
-  await fetchAndUpdateXeCount()
+    await fetchAndUpdateXeCount();
 }
 
 function listenSoNguoiDangKy() {
-  const refDangKy = collection(db, 'thongtindangky')
-  const unsub = onSnapshot(refDangKy, (snapshot) => {
-    const users = snapshot.docs.filter(doc => {
-      const data = doc.data()
-      return data.role !== 'admin'
-    })
-    soNguoiDangKy.value = users.length
-  })
-  unsubscribeListeners.push(unsub)
+    const refDangKy = collection(db, "thongtindangky");
+    const unsub = onSnapshot(refDangKy, (snapshot) => {
+        const users = snapshot.docs.filter((doc) => {
+            const data = doc.data();
+            return data.role !== "admin";
+        });
+        soNguoiDangKy.value = users.length;
+    });
+    unsubscribeListeners.push(unsub);
 }
 
 function listenTongYeuCau() {
-  const yeuCauRef = collection(db, 'lichsuyeucau')
-  const unsub = onSnapshot(yeuCauRef, (snapshot) => {
-    tongYeuCau.value = snapshot.size
-    if (lastTongYeuCau.value !== null) {
-      deltaYeuCau.value = tongYeuCau.value - lastTongYeuCau.value
-    }
-    lastTongYeuCau.value = tongYeuCau.value
-  })
-  unsubscribeListeners.push(unsub)
+    const yeuCauRef = collection(db, "lichsuyeucau");
+    const unsub = onSnapshot(yeuCauRef, (snapshot) => {
+        tongYeuCau.value = snapshot.size;
+        if (lastTongYeuCau.value !== null) {
+            deltaYeuCau.value = tongYeuCau.value - lastTongYeuCau.value;
+        }
+        lastTongYeuCau.value = tongYeuCau.value;
+    });
+    unsubscribeListeners.push(unsub);
 }
 
 async function listenTongLuotCongHoatDongRealtime() {
-  const lichSuRef = collection(db, 'lichsuhoatdong')
+    const lichSuRef = collection(db, "lichsuhoatdong");
 
-  // Lắng nghe tất cả ngày
-  const unsubLichSu = onSnapshot(lichSuRef, (ngaySnapshot) => {
-    // Hủy đăng ký cũ để tránh leak
-    unsubscribeXeListeners.forEach(unsub => unsub())
-    unsubscribeXeListeners.length = 0
+    // Lắng nghe tất cả ngày
+    const unsubLichSu = onSnapshot(lichSuRef, (ngaySnapshot) => {
+        // Hủy đăng ký cũ để tránh leak
+        unsubscribeXeListeners.forEach((unsub) => unsub());
+        unsubscribeXeListeners.length = 0;
 
-    // Duyệt qua từng ngày
-    ngaySnapshot.docs.forEach((ngayDoc) => {
-      const ngayId = ngayDoc.id
-      const xeRef = collection(db, 'lichsuhoatdong', ngayId, 'xe')
+        // Duyệt qua từng ngày
+        ngaySnapshot.docs.forEach((ngayDoc) => {
+            const ngayId = ngayDoc.id;
+            const xeRef = collection(db, "lichsuhoatdong", ngayId, "xe");
 
-      // Lắng nghe từng collection 'xe' của ngày
-      const unsubXe = onSnapshot(xeRef, (xeSnapshot) => {
-        let total = 0
-        xeSnapshot.docs.forEach((xeDoc) => {
-          const data = xeDoc.data()
-          const vao = data.solanvao || 0
-          const ra = data.solanra || 0
-          total += vao + ra
-        })
+            // Lắng nghe từng collection 'xe' của ngày
+            const unsubXe = onSnapshot(xeRef, (xeSnapshot) => {
+                let total = 0;
+                xeSnapshot.docs.forEach((xeDoc) => {
+                    const data = xeDoc.data();
+                    const vao = data.solanvao || 0;
+                    const ra = data.solanra || 0;
+                    total += vao + ra;
+                });
 
-        // Vì bạn lắng nghe theo từng ngày, bạn cần cộng dồn theo nhiều ngày
-        // => Giải pháp đơn giản: gom toàn bộ số ngày rồi tính tổng
-        recomputeTongLuotCongHoatDong()
-      })
+                // Vì bạn lắng nghe theo từng ngày, bạn cần cộng dồn theo nhiều ngày
+                // => Giải pháp đơn giản: gom toàn bộ số ngày rồi tính tổng
+                recomputeTongLuotCongHoatDong();
+            });
 
-      unsubscribeXeListeners.push(unsubXe)
-    })
-  })
+            unsubscribeXeListeners.push(unsubXe);
+        });
+    });
 
-  unsubscribeListeners.push(unsubLichSu)
+    unsubscribeListeners.push(unsubLichSu);
 }
 
 // Gom lại toàn bộ lượt cổng từ các ngày và xe
 async function recomputeTongLuotCongHoatDong() {
-  const lichSuRef = collection(db, 'lichsuhoatdong')
-  const lichSuDocs = await getDocs(lichSuRef)
+    const lichSuRef = collection(db, "lichsuhoatdong");
+    const lichSuDocs = await getDocs(lichSuRef);
 
-  let total = 0
+    let total = 0;
 
-  for (const ngayDoc of lichSuDocs.docs) {
-    const ngayId = ngayDoc.id
-    const xeRef = collection(db, 'lichsuhoatdong', ngayId, 'xe')
-    const xeDocs = await getDocs(xeRef)
+    for (const ngayDoc of lichSuDocs.docs) {
+        const ngayId = ngayDoc.id;
+        const xeRef = collection(db, "lichsuhoatdong", ngayId, "xe");
+        const xeDocs = await getDocs(xeRef);
 
-    for (const xeDoc of xeDocs.docs) {
-      const data = xeDoc.data()
-      const vao = data.solanvao || 0
-      const ra = data.solanra || 0
-      total += vao + ra
+        for (const xeDoc of xeDocs.docs) {
+            const data = xeDoc.data();
+            const vao = data.solanvao || 0;
+            const ra = data.solanra || 0;
+            total += vao + ra;
+        }
     }
-  }
 
-  tongLuotCongHoatDong.value = total
+    tongLuotCongHoatDong.value = total;
 }
 
 function listenTrangThaiCong() {
-  const db = getDatabase()
-  const congRef = rtdbRef(db, 'trangthaicong')
+    const db = getDatabase();
+    const congRef = rtdbRef(db, "trangthaicong");
 
-  const unsub = onValue(congRef, (snapshot) => {
-    trangThaiCong.value = snapshot.val()
-  })
+    const unsub = onValue(congRef, (snapshot) => {
+        trangThaiCong.value = snapshot.val();
+    });
 
-  // Push vào danh sách để unmount xóa listener nếu cần
-  unsubscribeListeners.push(() => off(congRef))
+    // Push vào danh sách để unmount xóa listener nếu cần
+    unsubscribeListeners.push(() => off(congRef));
 }
 
 onMounted(() => {
-  setupRealtimeListener()
-  listenSoNguoiDangKy()
-  listenTongYeuCau()
-  listenTongLuotCongHoatDongRealtime()
-  listenTrangThaiCong()
-})
+    setupRealtimeListener();
+    listenSoNguoiDangKy();
+    listenTongYeuCau();
+    listenTongLuotCongHoatDongRealtime();
+    listenTrangThaiCong();
+});
 
 onUnmounted(() => {
-  unsubscribeListeners.forEach((unsub) => unsub())
-  unsubscribeXeListeners.forEach((unsub) => unsub())
-})
+    unsubscribeListeners.forEach((unsub) => unsub());
+    unsubscribeXeListeners.forEach((unsub) => unsub());
+});
 
 definePageMeta({
-  layout: 'default',
-})
+    layout: "default",
+});
 </script>
 
 <template>
-  <Infomation :xeHienTai="xeHienTai" :deltaXeHienTai="deltaXeHienTai" :xeRaVaoHomNay="xeRaVaoHomNay"
-    :deltaXeRaVao="deltaXeRaVao" :soNguoiDangKy="soNguoiDangKy" :tongYeuCau="tongYeuCau" :deltaYeuCau="deltaYeuCau"
-    :tongLuotCongHoatDong="tongLuotCongHoatDong" :trangThaiCong="trangThaiCong" />
+    <Infomation
+        :xeHienTai="xeHienTai"
+        :deltaXeHienTai="deltaXeHienTai"
+        :xeRaVaoHomNay="xeRaVaoHomNay"
+        :deltaXeRaVao="deltaXeRaVao"
+        :soNguoiDangKy="soNguoiDangKy"
+        :tongYeuCau="tongYeuCau"
+        :deltaYeuCau="deltaYeuCau"
+        :tongLuotCongHoatDong="tongLuotCongHoatDong"
+        :trangThaiCong="trangThaiCong"
+    />
 </template>

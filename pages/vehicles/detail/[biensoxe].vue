@@ -76,8 +76,10 @@ import { useRoute, useRouter } from "vue-router";
 import { useDateList } from "@/components/vehicles/dateList.vue";
 import { useVehicleData } from "@/components/firebase/useVehicleTimeline";
 import ImageViewer from "@/utils/ImageViewer.vue";
+
 import { getFirestore } from "firebase/firestore";
 import { firebaseApp } from "@/plugins/firebase";
+
 const route = useRoute();
 const router = useRouter();
 const biensoxe = route.params.biensoxe as string;
@@ -85,7 +87,9 @@ const db = getFirestore(firebaseApp);
 
 const { dates, loading } = useDateList(db);
 const selectedDate = ref<string | null>(null);
+
 const { solanra, solanvao, timelines, timelineLoading, fetchVehicleDataByDate } = useVehicleData(db);
+
 
 function goBack() {
     router.back();

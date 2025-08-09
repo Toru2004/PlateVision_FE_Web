@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import TopBar from '@/components/organisms/TopBar.vue'
 import SideMenu from '@/components/organisms/SideMenu.vue'
+import NotificationToast from '@/components/NotificationToast.vue'
 
 const isSidebarOpen = ref(true)
 
@@ -26,9 +27,11 @@ const toggleSidebar = () => {
         <NuxtPage />
       </main>
     </div>
+
+    <!-- Toast Notification -->
+    <NotificationToast />
   </div>
 </template>
-
 <style scoped>
 .slide-enter-active,
 .slide-leave-active {

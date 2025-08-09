@@ -1,17 +1,13 @@
-
-
-import { firebaseApp } from './firebase'
-import { VueFire, VueFireAuth } from 'vuefire'
+import { firebaseApp } from "./0.firebase.client";
+import { VueFire, VueFireAuth } from "vuefire";
 
 export default defineNuxtPlugin((nuxtApp) => {
-  if (!firebaseApp) {
-    throw new Error('Firebase app was not initialized.')
-  }
+    if (!firebaseApp) {
+        throw new Error("Firebase app was not initialized.");
+    }
 
-  nuxtApp.vueApp.use(VueFire, {
-    firebaseApp: firebaseApp,
-    modules: [VueFireAuth()],
-  })
-})
-
-
+    nuxtApp.vueApp.use(VueFire, {
+        firebaseApp: firebaseApp,
+        modules: [VueFireAuth()],
+    });
+});
