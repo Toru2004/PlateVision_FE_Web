@@ -1,14 +1,19 @@
 import { getMessaging, onMessage } from "firebase/messaging";
-import { firebaseApp } from "@/plugins/firebase"; // file init firebase của bạn
 import { useNotificationsStore } from "../stores/notifications"; // nếu dùng Pinia/Vuex
+import type { FirebaseApp } from "firebase/app";
 
 export default defineNuxtPlugin(() => {
     if (typeof window !== "undefined") {
-        const messaging = getMessaging(firebaseApp);
+        const nuxtApp = useNuxtApp();
+        const firebaseApp = nuxtApp.$firebaseApp as FirebaseApp;
 
+        if (!firebaseApp) {
+            console.error("❌ Firebase chưa được khởi tạo trước khi FCM chạy");
+            return;
+        }
+        const messaging = getMessaging(firebaseApp);
         onMessage(messaging, (payload) => {
             console.log("📩 Foreground message:", payload);
-
             // Ví dụ: cập nhật store để hiển thị UI
             const store = useNotificationsStore();
             store.addNotification({
