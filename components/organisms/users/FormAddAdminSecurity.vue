@@ -21,7 +21,7 @@ const newUser = ref<UserCreate>({
     },
     email: "",
     cccd: "",
-    role: "user",
+    role: "admin",
     password: "",
 });
 
@@ -32,12 +32,7 @@ const handleClose = () => {
 const submitForm = () => {
     console.log("Dữ liệu mới:", newUser.value);
     // Validation
-    if (
-        !newUser.value.ten.trim() ||
-        !newUser.value.biensoxe.trim() ||
-        !newUser.value.email.trim() ||
-        !newUser.value.cccd.trim()
-    ) {
+    if (!newUser.value.ten.trim() || !newUser.value.email.trim() || !newUser.value.cccd.trim()) {
         toast.error("Vui lòng nhập đầy đủ thông tin"); // hoặc alert nếu không dùng toast
         return;
     }
@@ -60,7 +55,7 @@ const submitForm = () => {
         },
         email: "",
         cccd: "",
-        role: "user",
+        role: "admin",
         password: "",
     };
     emit("update:isModalOpen", false);
@@ -70,17 +65,13 @@ const submitForm = () => {
     <div v-if="isModalOpen" class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
         <!-- Nội dung form -->
         <div class="bg-white rounded shadow-lg w-[400px] p-6 relative z-50">
-            <h2 class="mb-4 text-xl font-semibold">Thêm người đăng ký</h2>
+            <h2 class="mb-4 text-xl font-semibold">Thêm bảo vệ</h2>
 
             <!-- Form đơn giản -->
             <form @submit.prevent="submitForm">
                 <div class="mb-3">
                     <label class="block mb-1 font-medium">Tên</label>
                     <input type="text" class="w-full px-3 py-2 border rounded" v-model="newUser.ten" />
-                </div>
-                <div class="mb-3">
-                    <label class="block mb-1 font-medium">Biển số xe</label>
-                    <input type="text" class="w-full px-3 py-2 border rounded" v-model="newUser.biensoxe" />
                 </div>
                 <div class="mb-3">
                     <label class="block mb-1 font-medium">Email</label>

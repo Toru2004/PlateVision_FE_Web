@@ -27,7 +27,7 @@
         try {
             const {data,lastDoc:newLastDoc,hasNext:more} = await paginateFirestore<RequestInfor>({
                 collectionPath: 'lichsuyeucau',
-                orderByField: 'timeRequest',
+                orderByField: 'approve',
                 limitCount: 10,
                 lastVisible: lastDoc.value,
                 firestoreInstance: $firestore,

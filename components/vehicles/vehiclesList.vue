@@ -1,11 +1,11 @@
 <template>
     <div>
-        <h1 class="text-2xl font-blod mb-4">Danh sách xe</h1>
+        <h1 class="mb-4 text-2xl font-blod">Danh sách xe</h1>
         <searchBar :data="allVehicles" :fields="['biensoxe', 'ten']" @filtered="handleFiltered" />
         <div v-if="loading" class="text-gray-600">dang tai...</div>
-        <table v-else class="table-auto w-full border border-gray-300">
+        <table v-else class="w-full border border-gray-300 table-auto">
             <thead class="bg-gray-100">
-                <tr class="bg-blue-600 text-white">
+                <tr class="text-white bg-blue-600">
                     <th class="p-2 border">Biển số chính</th>
                     <th class="p-2 border">Tên</th>
                     <th class="p-2 border">Biển số phụ</th>
@@ -13,27 +13,30 @@
             </thead>
             <tbody class="border-t">
                 <tr v-for="(vehicle, index) in displayVehicles" :key="index">
-                    <td class="p-2 border cursor-pointer bg-blue-100 hover:bg-blue-200"
-                        @click="vehicle.biensoxe ? $router.push(`/vehicles/detail/${vehicle.biensoxe}`) : ''">      
-                    {{ vehicle.biensoxe }}
+                    <td
+                        class="p-2 bg-blue-100 border cursor-pointer hover:bg-blue-200"
+                        @click="vehicle.biensoxe ? $router.push(`/vehicles/detail/${vehicle.biensoxe}`) : ''"
+                    >
+                        {{ vehicle.biensoxe }}
                     </td>
                     <td class="p-2 border">{{ vehicle.ten }}</td>
-                    <td class="p-2 border cursor-pointer bg-blue-100 hover:bg-blue-200" @click="vehicle.biensophu ? $router.push(`/vehicles/detail/${vehicle.biensophu.bienSo}`) : ''">
+                    <td
+                        class="p-2 bg-blue-100 border cursor-pointer hover:bg-blue-200"
+                        @click="vehicle.biensophu ? $router.push(`/vehicles/detail/${vehicle.biensophu.bienSo}`) : ''"
+                    >
                         <span v-if="vehicle.biensophu">{{ vehicle.biensophu.bienSo }}</span>
                         <span v-else>Không có</span>
                     </td>
                 </tr>
             </tbody>
-
         </table>
     </div>
-
 </template>
 
 <script setup lang="ts">
-import searchBar from '../organisms/searchBar.vue';
-import type { vehicles } from '@/@type/vehicles';
-import {useRoute} from 'vue-router';
+import searchBar from "../organisms/searchBar.vue";
+import type { vehicles } from "@/@type/vehicles";
+import { useRoute } from "vue-router";
 const allVehicles = ref<vehicles[]>([]);
 const filteredVehicles = ref<vehicles[]>([]);
 const route = useRoute();
@@ -47,19 +50,20 @@ interface Props {
 const props = defineProps<Props>();
 
 const displayVehicles = computed(() =>
-  filteredVehicles.value.filter(vehicle => vehicle.biensoxe && vehicle.biensoxe.trim() !== '')
+    filteredVehicles.value.filter((vehicle) => vehicle.biensoxe && vehicle.biensoxe.trim() !== "")
 );
 
 onMounted(() => {
     allVehicles.value = props.vehicles;
     filteredVehicles.value = props.vehicles; // Khởi tạo filteredVehicles với tất cả dữ liệu
 });
-watch(() => props.vehicles, (newVehicles) => {
-    allVehicles.value = newVehicles;
-    filteredVehicles.value = newVehicles;
-});
+watch(
+    () => props.vehicles,
+    (newVehicles) => {
+        allVehicles.value = newVehicles;
+        filteredVehicles.value = newVehicles;
+    }
+);
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

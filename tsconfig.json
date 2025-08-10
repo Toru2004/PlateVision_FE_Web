@@ -1,10 +1,21 @@
+// {
+//   // https://v3.nuxtjs.org/concepts/typescript
+//   "extends": "./.nuxt/tsconfig.json",
+//   "compilerOptions": {
+//     "types": ["@types/node"],
+//     "paths": {
+//       "@/*": ["./*"]
+//     }
+//   }
+// }
 {
-  // https://v3.nuxtjs.org/concepts/typescript
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "types": ["@types/node"],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "#app": ["./.nuxt"],
+      "#app/*": ["./.nuxt/*"]
     }
   }
 }
