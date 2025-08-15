@@ -46,7 +46,8 @@ const emit = defineEmits([
                 </label>
 
                 <div class="ml-auto">
-                    <button @click="emit('update:show-confirm-modal', true)" :disabled="isAdding"
+                    <button @click="newBienso.trim() && $emit('update:show-confirm-modal', true)"
+                        :disabled="!newBienso.trim() || isAdding"
                         class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50">
                         {{ isAdding ? "Đang thêm..." : "Thêm xe" }}
                     </button>

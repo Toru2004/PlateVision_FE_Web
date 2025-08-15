@@ -64,6 +64,14 @@ const fetchPage = async (isNext = false) => {
     }
     isLoading.value = false;
 };
+// Hàm mở modal xác nhận trước khi thêm
+const addXe = () => {
+    if (!newBienso.value.trim()) {
+        alert("Vui lòng nhập biển số");
+        return;
+    }
+    showConfirmModal.value = true;
+};
 
 // Hàm xác nhận thêm xe
 const confirmAddXe = async () => {
