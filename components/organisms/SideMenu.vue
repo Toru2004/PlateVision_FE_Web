@@ -12,6 +12,7 @@ const menuItems = [
     { label: "Quản lý gia hạn bãi đỗ xe", path: "/timeSchedule" },
     { label: "Quản lý yêu cầu", path: "/managerRequest" },
     { label: "Var bãi đỗ", path: "/parkingStatus" },
+    { label: "Xe đặc biệt/ưu tiên", path: "/rareVehicles" },
 ];
 
 const isActive = (path: string) => route.path.startsWith(path);
@@ -31,15 +32,11 @@ const goTo = (path: string) => {
         <nav class="flex-1 px-2 py-4 space-y-2 overflow-auto">
             <ul class="space-y-1">
                 <li v-for="item in menuItems" :key="item.path">
-                    <button
-                        @click="goTo(item.path)"
-                        class="w-full px-4 py-2 font-medium text-left transition-all duration-200 rounded-lg"
-                        :class="
-                            isActive(item.path)
+                    <button @click="goTo(item.path)"
+                        class="w-full px-4 py-2 font-medium text-left transition-all duration-200 rounded-lg" :class="isActive(item.path)
                                 ? 'bg-blue-600 text-white shadow-inner'
                                 : 'text-gray-300 hover:bg-blue-800 hover:text-white'
-                        "
-                    >
+                            ">
                         {{ item.label }}
                     </button>
                 </li>
