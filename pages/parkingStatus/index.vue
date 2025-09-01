@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { getDatabase, ref as dbRef, onValue } from 'firebase/database';
+import { getDatabase, ref as dbRef, onValue, set } from 'firebase/database';
 import PlateList from '@/components/organisms/parkingStatus/PlateList.vue';
 import { searchByKeyword } from '@/utils/search'; // <-- đường dẫn có thể điều chỉnh
 
@@ -8,6 +8,7 @@ const database = getDatabase();
 
 const allCars = ref<{ plate: string; canhbao?: boolean; timeExpired?: string; timestamp?: string; trangthai?: boolean }[]>([]);
 const gateStatus = ref<boolean | null>(null);
+const timeEnd = ref<string | null>(null);
 
 const searchTerm = ref('');
 const filteredCars = computed(() =>
@@ -61,12 +62,31 @@ const fetchRealtimeData = () => {
     onValue(gateRef, (snapshot) => {
         gateStatus.value = snapshot.val();
     });
+    const timeEndRef = dbRef(database, 'TimeEnd');
+    onValue(timeEndRef, (snapshot) => {
+        timeEnd.value = snapshot.val();
+    });
+};
+
+const saveTime = async (value: string) => {
+  const timeEndRef = dbRef(database, "TimeEnd");
+  await set(timeEndRef, value);
 };
 
 onMounted(fetchRealtimeData);
 </script>
 
 <template>
-    <PlateList :cars="currentPageItems" :gateStatus="gateStatus" :currentPage="currentPage" :totalPages="totalPages"
-        :onNext="nextPage" :onPrev="prevPage" :searchTerm="searchTerm" @update:searchTerm="(val) => searchTerm = val" />
+    <PlateList
+    :cars="currentPageItems"
+    :gateStatus="gateStatus"
+    :timeEnd="timeEnd"
+    :currentPage="currentPage"
+    :totalPages="totalPages"
+    :onNext="nextPage"
+    :onPrev="prevPage"
+    :searchTerm="searchTerm"
+    @update:searchTerm="(val) => searchTerm = val"
+    @saveTimeEnd="saveTime"
+  />
 </template>
