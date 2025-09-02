@@ -10,7 +10,8 @@ const menuItems = [
     { label: "Quản lý xe", path: "/vehicles" },
     { label: "Quản lý hoạt động bãi đỗ", path: "/historyParking" },
     { label: "Quản lý gia hạn bãi đỗ xe", path: "/timeSchedule" },
-    { label: "Quản lý yêu cầu", path: "/managerRequest" },
+    { label: "Quản lý yêu cầu", path: "/manageRequest" },
+    { label: "Quản lý doanh thu", path: "/manageRevenue" },
     { label: "Var bãi đỗ", path: "/parkingStatus" },
     { label: "Xe đặc biệt/ưu tiên", path: "/rareVehicles" },
 ];
