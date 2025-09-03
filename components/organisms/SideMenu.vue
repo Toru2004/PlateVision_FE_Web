@@ -6,14 +6,15 @@ const route = useRoute();
 
 const menuItems = [
     { label: "Dashboard", path: "/dashboard" },
-    { label: "Quản lý người dùng", path: "/users" },
-    { label: "Quản lý xe", path: "/vehicles" },
+    { label: "Quản lý người dùng", path: "/manageUsers" },
+    { label: "Quản lý xe", path: "/manageVehicles" },
+    { label: "QUản lý xe khách", path: "/managePassengerVehicles" },
+    { label: "QUản lý xe ưu tiên", path: "/managePriorityVehicle" },
     { label: "Quản lý hoạt động bãi đỗ", path: "/historyParking" },
     { label: "Quản lý gia hạn bãi đỗ xe", path: "/timeSchedule" },
     { label: "Quản lý yêu cầu", path: "/manageRequest" },
     { label: "Quản lý doanh thu", path: "/manageRevenue" },
-    { label: "Var bãi đỗ", path: "/parkingStatus" },
-    { label: "Xe đặc biệt/ưu tiên", path: "/rareVehicles" },
+    { label: "Quản lý bãi đỗ", path: "/manageParking" },
 ];
 
 const isActive = (path: string) => route.path.startsWith(path);

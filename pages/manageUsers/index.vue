@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { addDoc, collection, doc, getDocs, setDoc, type Firestore } from "firebase/firestore";
-import UserList from "@/components/organisms/users/UserList.vue";
+import UserList from "@/components/organisms/manageUsers/UserList.vue";
 import Loading from "@/components/atoms/Loading.vue";
-import FormAddUser from "@/components/organisms/users/FormAddUser.vue";
-import FormAddAdminSecurity from "@/components/organisms/users/FormAddAdminSecurity.vue";
+import FormAddUser from "@/components/organisms/manageUsers/FormAddUser.vue";
+import FormAddAdminSecurity from "@/components/organisms/manageUsers/FormAddAdminSecurity.vue";
 import { toast } from "vue3-toastify";
 definePageMeta({
     layout: "default",

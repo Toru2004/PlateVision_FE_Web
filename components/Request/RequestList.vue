@@ -1,8 +1,8 @@
 <template>
   <div>
     <h1 class="text-2xl font-bold mb-4">Danh sách yêu cầu</h1>
-    <!-- searchbar dung để lọc dữ liệu -->
-    <searchBar :data="allRequests" :fields="['name', 'cccd', 'email']" @filtered="handleFiltered" />
+    <!-- SearchBar dung để lọc dữ liệu -->
+    <SearchBar :data="allRequests" :fields="['name', 'cccd', 'email']" @filtered="handleFiltered" />
     <div v-if="loading">Đang tải...</div>
     <table v-else class="table-auto w-full border border-gray-300">
       <thead class="bg-gray-100">
@@ -41,7 +41,7 @@
 import type { RequestInfor } from '@/@type/Request';
 
 // khi search bar emit dữ liệu đã lọc, sẽ cập nhật fillteredRequests
-import searchBar from '../organisms/searchBar.vue';
+import SearchBar from '../organisms/SearchBar.vue';
 const allRequests = ref<RequestInfor[]>([]);
 const fillteredRequests = ref<RequestInfor[]>([]);
 function handleFiltered(filtered: RequestInfor[]) {

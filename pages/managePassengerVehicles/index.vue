@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from "vue";
 import { collection, addDoc, type Firestore } from "firebase/firestore";
 import { paginateFirestore } from "@/utils/paginateFirestore";
 import { searchByKeyword } from "@/utils/search";
-import PlateList from "@/components/organisms/rareVehicles/PlateList.vue";
+import PlateList from "@/components/organisms/managePassengerVehicles/PlateList.vue";
 
 interface XeInfo {
     id: string;

@@ -73,7 +73,7 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
-import { useDateList } from "@/components/vehicles/dateList.vue";
+import { useDateList } from "@/components/manageVehicles/dateList.vue";
 import { useVehicleData } from "@/components/firebase/useVehicleTimeline";
 import ImageViewer from "@/utils/ImageViewer.vue";
 
