@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { getDatabase, ref as dbRef, onValue, set } from 'firebase/database';
-import PlateList from '@/components/organisms/parkingStatus/PlateList.vue';
+import PlateList from '@/components/organisms/manageParking/PlateList.vue';
 import { searchByKeyword } from '@/utils/search'; // <-- đường dẫn có thể điều chỉnh
 
 const database = getDatabase();

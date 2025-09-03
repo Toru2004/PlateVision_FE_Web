@@ -82,7 +82,7 @@ const goTo = (path: string) => {
     }
 };
 const handleDetail = (licensePlate: string) => {
-    const path = `/vehicles/detail/${licensePlate}`;
+    const path = `/manageVehicles/detail/${licensePlate}`;
     if (route.path !== path) {
         router.push(path);
     }
