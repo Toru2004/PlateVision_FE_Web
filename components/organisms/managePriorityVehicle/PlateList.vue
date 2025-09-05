@@ -31,11 +31,11 @@ const emit = defineEmits([
 
 <template>
     <div class="p-4">
-        <h1 class="text-2xl font-bold mb-4">Danh sách xe khách</h1>
+        <h1 class="text-2xl font-bold mb-4">Danh sách xe ưu tiên</h1>
 
         <!-- Form thêm xe -->
         <div class="mb-6 p-4 border rounded bg-gray-50">
-            <h2 class="font-semibold mb-2">Thêm xe khách mới</h2>
+            <h2 class="font-semibold mb-2">Thêm xe ưu tiên mới</h2>
             <div class="flex items-center gap-2 mb-2">
                 <input :value="newBienso" @input="emit('update:new-bienso', ($event.target as HTMLInputElement).value)"
                     placeholder="Nhập biển số..." class="border px-3 py-2 rounded w-60" />
@@ -50,7 +50,7 @@ const emit = defineEmits([
             </div>
 
             <!-- Ô tìm kiếm -->
-            <h2 class="font-semibold mb-2">Tìm kiếm xe khách</h2>
+            <h2 class="font-semibold mb-2">Tìm kiếm xe ưu tiên</h2>
             <div class="mt-4">
                 <input :value="searchKeyword"
                     @input="emit('update:search-keyword', ($event.target as HTMLInputElement).value)" type="text"
@@ -97,7 +97,7 @@ const emit = defineEmits([
         <!-- Modal xác nhận -->
         <div v-if="showConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white p-6 rounded shadow-lg w-96">
-                <h2 class="text-lg font-semibold mb-4">Xác nhận thêm xe khách</h2>
+                <h2 class="text-lg font-semibold mb-4">Xác nhận thêm xe ưu tiên</h2>
                 <p>Biển số: <strong>{{ newBienso }}</strong></p>
                 <!-- <p>Ưu tiên: <strong>{{ newUutien ? "Có" : "Không" }}</strong></p> -->
                 <div class="flex justify-end gap-2 mt-4">

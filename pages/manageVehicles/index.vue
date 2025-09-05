@@ -13,6 +13,7 @@
 <script setup lang="ts">
     import type { vehicles } from '@/@type/vehicles';
     import { paginateFirestore } from '@/utils/paginateFirestore';
+    import VehiclesList from "@/components/organisms/manageVehicles/VehiclesList.vue";
     const { $firestore } = useNuxtApp();
     const vehicles = ref<vehicles[]>([]);
     const loading = ref(false);

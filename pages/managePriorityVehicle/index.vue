@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from "vue";
 import { collection, addDoc, type Firestore } from "firebase/firestore";
 import { paginateFirestore } from "@/utils/paginateFirestore";
 import { searchByKeyword } from "@/utils/search";
-import PlateList from "@/components/organisms/managePassengerVehicles/PlateList.vue";
+import PlateList from "@/components/organisms/managePriorityVehicle/PlateList.vue";
 
 interface XeInfo {
     id: string;
@@ -49,10 +49,11 @@ const fetchPage = async (isNext = false) => {
         limitCount,
         lastVisible: isNext ? lastDoc.value : undefined,
         firestoreInstance: db,
+        // bỏ filters ở đây
       });
 
     // lọc trong code
-    const filtered = data.filter((d) => d.uutien === false || d.uutien === undefined);
+    const filtered = data.filter((d) => d.uutien === true);
 
     if (isNext) {
       danhSachXe.value = [...danhSachXe.value, ...filtered];
@@ -67,6 +68,7 @@ const fetchPage = async (isNext = false) => {
   }
   isLoading.value = false;
 };
+
 
 // Hàm mở modal xác nhận trước khi thêm
 const addXe = () => {
@@ -90,7 +92,7 @@ const confirmAddXe = async () => {
             image: null,
             timeIn: null,
             timeOut: null,
-            uutien: false,
+            uutien: true,
         });
         newBienso.value = "";
         newUutien.value = false;
