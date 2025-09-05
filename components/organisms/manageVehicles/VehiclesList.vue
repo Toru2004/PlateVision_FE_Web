@@ -15,7 +15,7 @@
                 <tr v-for="(vehicle, index) in displayVehicles" :key="index">
                     <td
                         class="p-2 bg-blue-100 border cursor-pointer hover:bg-blue-200"
-                        @click="vehicle.biensoxe ? $router.push(`/vehicles/detail/${vehicle.biensoxe}`) : ''"
+                        @click="vehicle.biensoxe ? $router.push(`/manageVehicles/detail/${vehicle.biensoxe}`) : ''"
                     >
                         {{ vehicle.biensoxe }}
                     </td>
@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import searchBar from "../organisms/searchBar.vue";
+import searchBar from "@/components/organisms/SearchBar.vue";
 import type { vehicles } from "@/@type/vehicles";
 import { useRoute } from "vue-router";
 const allVehicles = ref<vehicles[]>([]);

@@ -30,6 +30,14 @@ function toggleShowHistory(index: number) {
 const goToDetail = (licensePlate: string) => {
     emit("detailHistoryParking", licensePlate);
 };
+
+function formatDate(dateStr: string): string {
+    if (!dateStr || dateStr.length !== 8) return dateStr; // tránh lỗi
+    const day = dateStr.slice(0, 2);
+    const month = dateStr.slice(2, 4);
+    const year = dateStr.slice(4);
+    return `${day}/${month}/${year}`;
+}
 </script>
 
 <template>
@@ -40,7 +48,7 @@ const goToDetail = (licensePlate: string) => {
         <div v-if="listParkingHistory.length" class="grid grid-cols-1 gap-4">
             <div v-for="(parkingRecord, index) in listParkingHistory" :key="index" class="p-4 bg-white border rounded shadow-sm">
                 <div @click="toggleShowHistory(index)" class="cursor-pointer">
-                    <h2 class="text-lg font-semibold text-blue-600">Ngày: {{ parkingRecord.date }}</h2>
+                    <h2 class="text-lg font-semibold text-blue-600">Ngày: {{ formatDate(parkingRecord.date) }}</h2>
                 </div>
 
                 <!-- TABLE HISTORY -->

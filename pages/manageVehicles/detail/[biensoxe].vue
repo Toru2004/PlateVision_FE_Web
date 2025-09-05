@@ -29,14 +29,14 @@
                         'bg-white text-gray-800': selectedDate !== date,
                     }"
                 >
-                    {{ date }}
+                    {{ formatDate(date) }}
                 </button>
             </div>
         </div>
 
         <div v-if="selectedDate && !timelineLoading" class="mt-6 space-y-4">
             <p class="text-lg">
-                <strong>{{ biensoxe }}</strong> vào ngày <strong>{{ selectedDate }}</strong
+                <strong>{{ biensoxe }}</strong> vào ngày <strong>{{ formatDate(selectedDate) }}</strong
                 >:
             </p>
             <p>
@@ -53,14 +53,14 @@
                         <p>
                             <strong>#{{ index + 1 }}</strong> - {{ item.id }}
                         </p>
-                        <p><strong>Giờ vào:</strong> {{ item.timeIn }}</p>
-                        <p><strong>Giờ ra:</strong> {{ item.timeOut }}</p>
+                        <p><strong>Giờ vào:</strong> {{ item.timein }}</p>
+                        <p><strong>Giờ ra:</strong> {{ item.timeout }}</p>
                         <div class="flex flex-wrap gap-3 mt-2">
                             <ImageViewer v-if="item.imageIn" :src="item.imageIn" />
                             <ImageViewer v-if="item.imageOut" :src="item.imageOut" />
 
-                            <ImageViewer v-if="item.hinhdauxevao" :src="item.hinhdauxevao" />
-                            <ImageViewer v-if="item.hinhdauxera" :src="item.hinhdauxera" />
+                            <ImageViewer v-if="item.biensoxevao" :src="item.biensoxevao" />
+                            <ImageViewer v-if="item.biensoxera" :src="item.biensoxera" />
                             <!-- <img :src="item.hinhdauxevao" alt="Hình đầu vào" class="object-cover w-32 h-20 border" v-if="item.hinhdauxevao" />
                         <img :src="item.hinhdauxera" alt="Hình đầu ra" class="object-cover w-32 h-20 border" v-if="item.hinhdauxera" /> -->
                         </div>
@@ -73,7 +73,7 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
-import { useDateList } from "@/components/manageVehicles/dateList.vue";
+import { useDateList } from "@/components/organisms/manageVehicles/DateList.vue";
 import { useVehicleData } from "@/components/firebase/useVehicleTimeline";
 import ImageViewer from "@/utils/ImageViewer.vue";
 
@@ -97,6 +97,14 @@ function goBack() {
 async function selectDate(date: string) {
     selectedDate.value = date;
     await fetchVehicleDataByDate(biensoxe, date);
+}
+
+function formatDate(dateStr: string): string {
+    if (!dateStr || dateStr.length !== 8) return dateStr; // tránh lỗi
+    const day = dateStr.slice(0, 2);
+    const month = dateStr.slice(2, 4);
+    const year = dateStr.slice(4);
+    return `${day}/${month}/${year}`;
 }
 </script>
 
