@@ -5,6 +5,7 @@ interface Props {
   title: string;
   vehicles: VehicleInfo[];
   vehicleType: string;
+  parkingDate: string;
   color?: string;
 }
 
@@ -16,7 +17,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const goToDetail = (licensePlate: string) => {
-  const payload = `${licensePlate}_${props.vehicleType}`;
+  const payload = `${licensePlate}_${props.vehicleType}_${props.parkingDate}`;
   emit("detail", payload);
 };
 </script>
