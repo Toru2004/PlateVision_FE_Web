@@ -11,7 +11,7 @@
 
             <!-- Tiêu đề biển số -->
             <h1 class="mb-6 text-2xl font-bold text-gray-800">
-                Nhật ký hoạt động của xe <span class="text-blue-600">{{ biensoxe }}</span>
+                Nhật ký hoạt động của xe <span class="text-blue-600">{{ licensePlate }}</span>
             </h1>
 
             <!-- Loading -->
@@ -36,7 +36,7 @@
 
         <div v-if="selectedDate && !timelineLoading" class="mt-6 space-y-4">
             <p class="text-lg">
-                <strong>{{ biensoxe }}</strong> vào ngày <strong>{{ formatDate(selectedDate) }}</strong
+                <strong>{{ licensePlate }}</strong> vào ngày <strong>{{ formatDate(selectedDate) }}</strong
                 >:
             </p>
             <p>
@@ -74,7 +74,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
 import { useDateList } from "@/components/organisms/manageVehicles/DateList.vue";
-import { useVehicleData } from "@/components/firebase/useVehicleTimeline";
+import { useMultiVehicleData } from "@/components/firebase/useVehicleTimeline";
 import ImageViewer from "@/utils/ImageViewer.vue";
 
 import { getFirestore } from "firebase/firestore";
@@ -82,20 +82,21 @@ import { firebaseApp } from "@/plugins/0.firebase.client";
 
 const route = useRoute();
 const router = useRouter();
-const biensoxe = route.params.biensoxe as string;
+const vehicleCode = route.params.vehicleCode as string;
+const [licensePlate, vehicleType] = vehicleCode.split("_");
 const db = getFirestore(firebaseApp);
 
 const { dates, loading } = useDateList(db);
 const selectedDate = ref<string | null>(null);
 
-const { solanra, solanvao, timelines, timelineLoading, fetchVehicleDataByDate } = useVehicleData(db);
+const { solanra, solanvao, timelines, timelineLoading, fetchVehicleDataByDate } = useMultiVehicleData(db, vehicleType);
 
 function goBack() {
     router.back();
 }
 async function selectDate(date: string) {
     selectedDate.value = date;
-    await fetchVehicleDataByDate(biensoxe, date);
+    await fetchVehicleDataByDate(licensePlate, date);
 }
 
 function formatDate(dateStr: string): string {

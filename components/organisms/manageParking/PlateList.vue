@@ -20,7 +20,7 @@ defineProps<{
 
 const emit = defineEmits<{
     (e: "update:searchTerm", value: string): void;
-    (e: "saveTimeEnd", value: string): void;
+    (e: "saveTimeEnd", value: string | null): void;
 }>();
 
 // State chỉnh sửa thời gian hạn
@@ -35,8 +35,13 @@ const startEdit = (currentTime: string | null) => {
 
 // Lưu → emit lên cha
 const saveTime = () => {
-    if (!newTime.value) return;
-    emit("saveTimeEnd", newTime.value);
+    emit("saveTimeEnd", newTime.value || null);
+    editing.value = false;
+};
+
+// Xóa hạn
+const removeTime = () => {
+    emit("saveTimeEnd", null);
     editing.value = false;
 };
 </script>
@@ -66,7 +71,7 @@ const saveTime = () => {
         <div class="flex items-center justify-between p-4 mb-4 bg-gray-100 border rounded">
             <div>
                 <strong>Hạn để xe trong bãi: </strong>
-                <span v-if="!editing">{{ timeEnd }}</span>
+                <span v-if="!editing">{{ timeEnd ?? 'Không giới hạn' }}</span>
                 <div v-else class="flex items-center gap-2">
                     <input
                         v-model="newTime"
@@ -82,13 +87,35 @@ const saveTime = () => {
                     </button>
                 </div>
             </div>
-            <button
-                v-if="!editing"
-                @click="startEdit(timeEnd)"
-                class="px-3 py-1 text-sm text-white bg-gray-600 rounded hover:bg-gray-700"
-            >
-                Chỉnh sửa
-            </button>
+
+            <div class="flex gap-2">
+                <!-- Nếu chưa editing và có hạn -->
+                <button
+                    v-if="!editing && timeEnd"
+                    @click="removeTime"
+                    class="px-3 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-700"
+                >
+                    Bỏ hạn
+                </button>
+
+                <!-- Nếu chưa editing và không có hạn -->
+                <button
+                    v-if="!editing && !timeEnd"
+                    @click="startEdit(null)"
+                    class="px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700"
+                >
+                    Đặt hạn
+                </button>
+
+                <!-- Nếu có hạn thì cho chỉnh sửa -->
+                <button
+                    v-if="!editing && timeEnd"
+                    @click="startEdit(timeEnd)"
+                    class="px-3 py-1 text-sm text-white bg-gray-600 rounded hover:bg-gray-700"
+                >
+                    Chỉnh sửa
+                </button>
+            </div>
         </div>
 
         <!-- Danh sách xe -->

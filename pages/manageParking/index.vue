@@ -68,7 +68,7 @@ const fetchRealtimeData = () => {
     });
 };
 
-const saveTime = async (value: string) => {
+const saveTime = async (value: string | null) => {
   const timeEndRef = dbRef(database, "TimeEnd");
   await set(timeEndRef, value);
 };
