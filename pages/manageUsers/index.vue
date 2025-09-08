@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { addDoc, collection, doc, getDocs, setDoc, type Firestore } from "firebase/firestore";
 import UserList from "@/components/organisms/manageUsers/UserList.vue";
 import Loading from "@/components/atoms/Loading.vue";
@@ -58,28 +59,31 @@ const handleOpenAddUserModal = (): void => {
     isOpenAddUserModal.value = true;
 };
 
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+const ADMIN_EMAIL = "adminsystem@gmail.com";
+const ADMIN_PASSWORD = "123456";
 
 const handleCreateUser = async (newUser: UserCreate) => {
+    const auth = getAuth();
     try {
         loading.value = true;
 
-        //Tạo user trong Firebase Authentication
-        const auth = getAuth();
+        // Tạo user mới
         const userCredential = await createUserWithEmailAndPassword(auth, newUser.email, newUser.password);
-
         const uid = userCredential.user.uid;
         const { password, ...userData } = newUser;
 
-        //Lưu thông tin vào Firestore (dùng uid làm document ID)
-        const docRef = await setDoc(doc(db, "thongtindangky", uid), {
-            ...userData,
-        });
+        // Lưu thông tin vào Firestore
+        await setDoc(doc(db, "thongtindangky", uid), { ...userData });
 
-        //Cập nhật state/UI
-        console.log("User mới:", newUser);
-        users.value.push({ ...newUser });
-        toast.success("Đã thêm thành công");
+        // Đăng xuất user vừa tạo
+        await signOut(auth);
+
+        // Đăng nhập lại tài khoản admin
+        await signInWithEmailAndPassword(auth, ADMIN_EMAIL, ADMIN_PASSWORD);
+
+        // Update UI
+        users.value.push(userData);
+        toast.success("Đã thêm thành công và quay lại admin");
     } catch (err: any) {
         console.error("Lỗi khi tạo user:", err);
         toast.error(err.message || "Thêm thất bại");
@@ -89,27 +93,32 @@ const handleCreateUser = async (newUser: UserCreate) => {
 };
 
 const handleCreateAdminSecurity = async (newUser: UserCreate) => {
+    const auth = getAuth();
     try {
         loading.value = true;
-        //Tạo user trong Firebase Authentication
-        const auth = getAuth();
-        const userCredential = await createUserWithEmailAndPassword(auth, newUser.email, newUser.password);
 
-        const uid = userCredential.user.uid;
+        // Tạo user mới
+        const userCredential = await createUserWithEmailAndPassword(auth, newUser.email, newUser.password);
         const { password, ...userData } = newUser;
-        const docRef = await addDoc(collection(db, "thongtindangky"), {
-            ...userData,
-        });
+
+        // Lưu vào Firestore
+        const docRef = await addDoc(collection(db, "thongtindangky"), { ...userData });
+
+        // Đăng xuất user vừa tạo
+        await signOut(auth);
+
+        // Đăng nhập lại admin
+        await signInWithEmailAndPassword(auth, ADMIN_EMAIL, ADMIN_PASSWORD);
+
         if (docRef && docRef.id) {
-            console.log("User mới:", newUser);
-            users.value.push(newUser);
-            toast.success("Đã thêm thành công"); // ✅ chỉ khi thật sự thành công mới hiển thị
+            users.value.push(userData);
+            toast.success("Đã thêm thành công và quay lại admin");
         } else {
             throw new Error("Không nhận được ID từ Firestore.");
         }
-    } catch (err) {
+    } catch (err: any) {
         console.error("Lỗi khi thêm người dùng:", err);
-        toast.error("Thêm thất bại");
+        toast.error(err.message || "Thêm thất bại");
     } finally {
         loading.value = false;
     }

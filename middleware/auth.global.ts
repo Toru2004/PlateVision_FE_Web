@@ -22,7 +22,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
         // Truy vấn tài khoản theo email
         const q = query(collection(db, "thongtinadmin"), where("email", "==", user.email || ""));
         const snapshot = await getDocs(q);
-
+        // console.log(user.email);
         if (snapshot.empty) {
             return navigateTo("/auth/login");
         }
