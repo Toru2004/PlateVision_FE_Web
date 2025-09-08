@@ -13,12 +13,18 @@ const toggleSidebar = () => {
 <template>
   <div class="flex h-screen overflow-hidden">
     <!-- Sidebar -->
-    <transition name="slide">
-      <SideMenu v-if="isSidebarOpen" class="w-64 bg-gray-800 text-white" />
-    </transition>
+    <div
+      class="transition-all duration-300 ease-in-out bg-[#1E293B] text-white"
+      :class="isSidebarOpen ? 'w-64' : 'w-0'"
+    >
+      <SideMenu v-show="isSidebarOpen" />
+    </div>
 
     <!-- Right content -->
-    <div class="flex flex-col flex-1">
+    <div
+      class="flex flex-col flex-1 transition-all duration-300 ease-in-out"
+      :class="isSidebarOpen ? 'ml-0' : 'ml-0'"
+    >
       <!-- TopBar -->
       <TopBar @toggle="toggleSidebar" />
 
@@ -32,14 +38,3 @@ const toggleSidebar = () => {
     <NotificationToast />
   </div>
 </template>
-<style scoped>
-.slide-enter-active,
-.slide-leave-active {
-  transition: all 0.3s ease;
-}
-.slide-enter-from,
-.slide-leave-to {
-  transform: translateX(-100%);
-  opacity: 0;
-}
-</style>

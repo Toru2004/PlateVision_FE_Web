@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1 class="mb-4 text-2xl font-blod">Danh sách xe</h1>
-        <searchBar :data="allVehicles" :fields="['biensoxe', 'ten']" @filtered="handleFiltered" />
+        <SearchBar class="mb-4" :data="allVehicles" :fields="['biensoxe', 'ten']" @filtered="handleFiltered" />
         <div v-if="loading" class="text-gray-600">dang tai...</div>
         <table v-else class="w-full border border-gray-300 table-auto">
             <thead class="bg-gray-100">
@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import searchBar from "@/components/organisms/SearchBar.vue";
+import SearchBar from "@/components/organisms/SearchBar.vue";
 import type { vehicles } from "@/@type/vehicles";
 import { useRoute } from "vue-router";
 const allVehicles = ref<vehicles[]>([]);
