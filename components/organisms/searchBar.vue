@@ -1,10 +1,12 @@
 <template>
-  <div class="relative w-full max-w-md mx-auto">
+  <div class="relative w-full max-w-md">
     <input
       type="text"
       v-model="searchText"
-      :placeholder="props.placeholder || 'Tìm kiếm...'"
-      class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+      :placeholder="placeholder || 'Tìm kiếm...'"
+      class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm
+             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+             transition text-sm"
     />
     <!-- Icon tìm kiếm -->
     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -21,28 +23,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { searchByKeyword } from '@/utils/search'
+import { ref, watch } from "vue";
+import { searchByKeyword } from "@/utils/search";
 
 interface Props<T> {
-  data: T[]
-  fields: (keyof T)[]
-  placeholder?: string
+  data: T[];
+  fields: (keyof T)[];
+  placeholder?: string;
 }
 
-const props = defineProps<Props<any>>() // generic
-const emit = defineEmits<{
-  (e: 'filtered', value: any[]): void
-}>()
+const props = defineProps<Props<any>>();
+const emit = defineEmits<{ (e: "filtered", value: any[]): void }>();
 
-const searchText = ref('')
+const searchText = ref("");
 
-// Watch input text và emit dữ liệu lọc
+// mỗi khi nhập text thì lọc và emit kết quả
 watch(searchText, () => {
-  const filtered = searchByKeyword(props.data, searchText.value, props.fields)
-  emit('filtered', filtered)
-})
+  const filtered = searchByKeyword(props.data, searchText.value, props.fields);
+  emit("filtered", filtered);
+});
 </script>
-
-<style scoped>
-</style>

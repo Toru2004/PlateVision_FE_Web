@@ -3,7 +3,7 @@
         <RequestList :requests="requests" :loading="loading" />
         <div class="text-center mt-4">
             <button v-if="hasNext && !loading" @click="fetchPage"
-                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-900">More</button>
+                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-900">Tải thêm</button>
             <div v-else-if="loading" class="text-gray-600">dang tai...</div>
             <div v-else class="text-gray-600 italic">het du lieu</div>
         </div>

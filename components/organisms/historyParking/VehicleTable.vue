@@ -23,43 +23,57 @@ const goToDetail = (licensePlate: string) => {
 </script>
 
 <template>
-  <table class="w-full text-sm border border-collapse table-auto">
-    <thead class="bg-gray-200">
-      <tr>
-        <th colspan="4" class="p-2 font-bold border text-left">{{ title }}</th>
-      </tr>
-      <tr>
-        <th class="p-2 border">Biển số xe</th>
-        <th class="p-2 border">Số lần vào</th>
-        <th class="p-2 border">Số lần ra</th>
-        <th class="p-2 border">Chi tiết</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-if="!vehicles || vehicles.length === 0">
-        <td colspan="4" class="p-2 italic text-center text-gray-500 border">
-          Không có xe nào được gửi trong ngày này
-        </td>
-      </tr>
-      <tr
-        v-else
-        v-for="(vehicle, index) in vehicles"
-        :key="index"
-        class="text-center hover:bg-gray-100"
-      >
-        <td class="p-2 border">{{ vehicle.licensePlate ?? "---" }}</td>
-        <td class="p-2 border">{{ vehicle.solanvao ?? "---" }}</td>
-        <td class="p-2 border">{{ vehicle.solanra ?? "---" }}</td>
-        <td class="p-2 border">
-          <button
-            class="px-2 py-1 text-white rounded"
-            :class="color || 'bg-blue-500 hover:bg-blue-600'"
-            @click="goToDetail(vehicle.licensePlate)"
+  <div class="bg-white rounded-xl shadow p-4">
+    <!-- Tiêu đề bảng -->
+    <h3 class="mb-4 text-lg font-semibold text-gray-700">
+      {{ title }}
+    </h3>
+
+    <!-- Bảng -->
+    <div class="overflow-x-auto rounded-lg border">
+      <table class="w-full text-sm text-left border-collapse">
+        <thead class="bg-gray-50 text-gray-600 text-xs uppercase">
+          <tr>
+            <th class="px-4 py-2 border">Biển số xe</th>
+            <th class="px-4 py-2 border">Số lần vào</th>
+            <th class="px-4 py-2 border">Số lần ra</th>
+            <th class="px-4 py-2 border text-center">Chi tiết</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y">
+          <tr v-if="!vehicles || vehicles.length === 0">
+            <td colspan="4" class="px-4 py-3 italic text-center text-gray-500">
+              Không có xe nào được gửi trong ngày này
+            </td>
+          </tr>
+
+          <tr
+            v-else
+            v-for="(vehicle, index) in vehicles"
+            :key="index"
+            class="hover:bg-gray-50"
           >
-            Xem chi tiết
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            <td class="px-4 py-2 border font-medium text-gray-700">
+              {{ vehicle.licensePlate ?? "---" }}
+            </td>
+            <td class="px-4 py-2 border text-center">
+              {{ vehicle.solanvao ?? "---" }}
+            </td>
+            <td class="px-4 py-2 border text-center">
+              {{ vehicle.solanra ?? "---" }}
+            </td>
+            <td class="px-4 py-2 border text-center">
+              <button
+                class="px-3 py-1 text-xs font-medium text-white rounded-lg transition"
+                :class="color || 'bg-blue-500 hover:bg-blue-600'"
+                @click="goToDetail(vehicle.licensePlate)"
+              >
+                Xem chi tiết
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </template>
