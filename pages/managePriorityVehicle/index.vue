@@ -8,10 +8,9 @@ import PlateList from "@/components/organisms/managePriorityVehicle/PlateList.vu
 interface XeInfo {
     id: string;
     bienso: string;
-    image: string | null;
-    timeIn: any;
-    timeOut: any;
     uutien: boolean;
+    createdAt: number;
+    updatedAt: number;
 }
 
 const { $firestore } = useNuxtApp();
@@ -45,7 +44,7 @@ const fetchPage = async (isNext = false) => {
     const { data, lastDoc: last, hasNext: next } =
       await paginateFirestore<XeInfo>({
         collectionPath: "thongtinkhach",
-        orderByField: "timeIn",
+        orderByField: "createdAt",
         limitCount,
         lastVisible: isNext ? lastDoc.value : undefined,
         firestoreInstance: db,
@@ -89,10 +88,9 @@ const confirmAddXe = async () => {
     try {
         await addDoc(collection(db, "thongtinkhach"), {
             bienso: newBienso.value.trim(),
-            image: null,
-            timeIn: null,
-            timeOut: null,
             uutien: true,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
         });
         newBienso.value = "";
         newUutien.value = false;
