@@ -51,7 +51,7 @@
             <td
               class="px-4 py-2 cursor-pointer"
               :class="vehicle.biensophu ? 'text-blue-600 font-medium hover:underline' : 'text-gray-400 italic'"
-              @click="vehicle.biensophu ? $router.push(`/vehicles/detail/${vehicle.biensophu.bienSo}`) : ''"
+              @click="vehicle.biensophu ? $router.push(`/manageVehicles/detail/${vehicle.biensophu.bienSo}`) : ''"
             >
               <span v-if="vehicle.biensophu">{{ vehicle.biensophu.bienSo }}</span>
               <span v-else>Không có</span>

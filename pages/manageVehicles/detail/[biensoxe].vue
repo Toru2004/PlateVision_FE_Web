@@ -23,10 +23,10 @@
                     v-for="(date, index) in dates"
                     :key="date"
                     @click="selectDate(date)"
-                    class="px-4 py-2 transition-all duration-200 border border-gray-300 rounded-lg shadow-sm hover:bg-blue-100 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    class="px-4 py-2 transition-all duration-200 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                     :class="{
-                        'bg-blue-500 text-white border-blue-500': selectedDate === date,
-                        'bg-white text-gray-800': selectedDate !== date,
+                        'bg-blue-500 text-white border-blue-500 hover:bg-blue-400': selectedDate === date,
+                        'bg-white text-gray-800 hover:bg-blue-100 hover:border-blue-400': selectedDate !== date,
                     }"
                 >
                     {{ formatDate(date) }}

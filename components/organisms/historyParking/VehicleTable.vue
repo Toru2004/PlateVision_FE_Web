@@ -32,12 +32,12 @@ const goToDetail = (licensePlate: string) => {
     <!-- Bảng -->
     <div class="overflow-x-auto rounded-lg border">
       <table class="w-full text-sm text-left border-collapse">
-        <thead class="bg-gray-50 text-gray-600 text-xs uppercase">
+        <thead class="bg-gray-50 text-gray-600">
           <tr>
             <th class="px-4 py-2 border">Biển số xe</th>
             <th class="px-4 py-2 border">Số lần vào</th>
             <th class="px-4 py-2 border">Số lần ra</th>
-            <th class="px-4 py-2 border text-center">Chi tiết</th>
+            <th class="px-4 py-2 border">Chi tiết</th>
           </tr>
         </thead>
         <tbody class="divide-y">
@@ -56,13 +56,13 @@ const goToDetail = (licensePlate: string) => {
             <td class="px-4 py-2 border font-medium text-gray-700">
               {{ vehicle.licensePlate ?? "---" }}
             </td>
-            <td class="px-4 py-2 border text-center">
+            <td class="px-4 py-2 border">
               {{ vehicle.solanvao ?? "---" }}
             </td>
-            <td class="px-4 py-2 border text-center">
+            <td class="px-4 py-2 border">
               {{ vehicle.solanra ?? "---" }}
             </td>
-            <td class="px-4 py-2 border text-center">
+            <td class="px-4 py-2 border">
               <button
                 class="px-3 py-1 text-xs font-medium text-white rounded-lg transition"
                 :class="color || 'bg-blue-500 hover:bg-blue-600'"
