@@ -2,7 +2,8 @@ import type { List } from "postcss/lib/list";
 
 type ParkingRecord = {
     date: string;
-    vehicles: List<VehicleInfo>;
+    motorbikes: List<VehicleInfo>;
+    cars: List<VehicleInfo>;
 };
 
 type VehicleInfo = {
@@ -10,6 +11,7 @@ type VehicleInfo = {
     solanvao: number;
     solanra: number;
     timeline: Array<TimeLine>;
+    vehicleType: string;
 };
 
 type TimeLine = {
