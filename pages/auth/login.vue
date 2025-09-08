@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { firebaseApp } from "@/plugins/0.firebase.client";
 import { signInWithEmailAndPassword, signOut, type Auth } from "firebase/auth";
-import { getDocs, collection, query, where, type Firestore, getDoc, doc, updateDoc } from "firebase/firestore";
+import { getDocs, collection, query, where, type Firestore, updateDoc } from "firebase/firestore";
 import { getMessaging, getToken } from "firebase/messaging";
 import { getCurrentUser } from "vuefire";
 
@@ -18,9 +18,11 @@ const email = ref("");
 const password = ref("");
 const errorMsg = ref("");
 const showPassword = ref(false);
+const isLoading = ref(false); // ✅ state loading
 
 const handleLogin = async () => {
     errorMsg.value = "";
+    isLoading.value = true; // ✅ bật loading
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
         const user = userCredential.user;
@@ -40,34 +42,6 @@ const handleLogin = async () => {
         }
 
         const userData = querySnapshot.docs[0].data();
-        // const role = userData.role;
-        const { $firestore } = useNuxtApp();
-        const db = $firestore as Firestore;
-        const addFCMToken = async (fcmToken: string) => {
-    try {
-        const user = await getCurrentUser();
-        if (!user) return;
-
-        // 🔍 Lấy document dựa trên email thay vì UID
-        const q = query(collection(db, "thongtinadmin"), where("email", "==", user.email));
-        const snap = await getDocs(q);
-
-        if (!snap.empty) {
-            const docRef = snap.docs[0].ref;
-
-            // ✅ Ghi đè field fcmTokens bằng token mới
-            await updateDoc(docRef, {
-                fcmTokens: [fcmToken] // chỉ lưu một token duy nhất
-            });
-
-            console.log("✅ Đã lưu FCM token mới:", fcmToken);
-        } else {
-            console.warn("⚠️ Không tìm thấy tài khoản trong thongtinadmin.");
-        }
-    } catch (err) {
-        console.error("❌ Lỗi khi lưu fcm token:", err);
-    }
-};
 
         // ✅ Điều hướng theo role
         if (userData != null) {
@@ -87,10 +61,19 @@ const handleLogin = async () => {
 
                 if (currentToken) {
                     console.log(" FCM Token:", currentToken);
+
+                    // 🔄 Lưu token vào Firestore
+                    const user = await getCurrentUser();
+                    if (user) {
+                        const q = query(collection(firestore, "thongtinadmin"), where("email", "==", user.email));
+                        const snap = await getDocs(q);
+                        if (!snap.empty) {
+                            await updateDoc(snap.docs[0].ref, { fcmTokens: [currentToken] });
+                        }
+                    }
                 } else {
                     console.warn(" Không lấy được token. Cần xin quyền.");
                 }
-                await addFCMToken(currentToken);
             } catch (err) {
                 console.error(" Lỗi khi xử lý Messaging:", err);
             }
@@ -100,7 +83,9 @@ const handleLogin = async () => {
             errorMsg.value = "Tài khoản không có quyền truy cập.";
         }
     } catch (error: any) {
-        errorMsg.value = "Đăng nhập thất bại: " + error.message;
+        errorMsg.value = "Sai email, mật khẩu hoặc mất kết nối mạng";
+    } finally {
+        isLoading.value = false; // ✅ tắt loading
     }
 };
 </script>
@@ -140,7 +125,6 @@ const handleLogin = async () => {
                             class="absolute inset-y-0 flex items-center text-sm text-gray-500 right-3"
                             @click="showPassword = !showPassword"
                         >
-                            <!-- {{ showPassword ? 'Ẩn' : 'Hiện' }} -->
                             <Icon v-if="showPassword" name="EyeOff" :size="16" />
                             <Icon v-else name="Eye" :size="16" />
                         </button>
@@ -153,9 +137,31 @@ const handleLogin = async () => {
 
                 <button
                     type="submit"
-                    class="w-full py-2 font-semibold text-white transition duration-200 bg-blue-600 hover:bg-blue-700 rounded-xl"
+                    class="w-full py-2 font-semibold text-white transition duration-200 bg-blue-600 hover:bg-blue-700 rounded-xl flex items-center justify-center"
+                    :disabled="isLoading"
                 >
-                    Đăng nhập
+                    <svg
+                        v-if="isLoading"
+                        class="w-5 h-5 mr-2 text-white animate-spin"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                        ></circle>
+                        <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                        ></path>
+                    </svg>
+                    <span>{{ isLoading ? "Đang đăng nhập..." : "Đăng nhập" }}</span>
                 </button>
             </form>
 

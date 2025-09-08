@@ -58,13 +58,8 @@ const removeTime = () => {
                     {{ gateStatus === null ? " Không rõ" : gateStatus ? " Mở" : " Đóng" }}
                 </span>
             </div>
-            <input
-                type="text"
-                class="px-4 py-2 text-base border rounded w-96"
-                placeholder="Tìm kiếm biển số..."
-                :value="searchTerm"
-                @input="emit('update:searchTerm', ($event.target as HTMLInputElement).value)"
-            />
+            <input type="text" class="px-4 py-2 text-base border rounded w-96" placeholder="Tìm kiếm biển số..."
+                :value="searchTerm" @input="emit('update:searchTerm', ($event.target as HTMLInputElement).value)" />
         </div>
 
         <!-- Hạn để xe trong bãi -->
@@ -73,16 +68,8 @@ const removeTime = () => {
                 <strong>Hạn để xe trong bãi: </strong>
                 <span v-if="!editing">{{ timeEnd ?? 'Không giới hạn' }}</span>
                 <div v-else class="flex items-center gap-2">
-                    <input
-                        v-model="newTime"
-                        type="time"
-                        step="1"
-                        class="px-2 py-1 border rounded"
-                    />
-                    <button
-                        @click="saveTime"
-                        class="px-3 py-1 text-white bg-blue-600 rounded hover:bg-blue-700"
-                    >
+                    <input v-model="newTime" type="time" step="1" class="px-2 py-1 border rounded" />
+                    <button @click="saveTime" class="px-3 py-1 text-white bg-blue-600 rounded hover:bg-blue-700">
                         Lưu
                     </button>
                 </div>
@@ -90,29 +77,20 @@ const removeTime = () => {
 
             <div class="flex gap-2">
                 <!-- Nếu chưa editing và có hạn -->
-                <button
-                    v-if="!editing && timeEnd"
-                    @click="removeTime"
-                    class="px-3 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-700"
-                >
+                <button v-if="!editing && timeEnd" @click="removeTime"
+                    class="px-3 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-700">
                     Bỏ hạn
                 </button>
 
                 <!-- Nếu chưa editing và không có hạn -->
-                <button
-                    v-if="!editing && !timeEnd"
-                    @click="startEdit(null)"
-                    class="px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700"
-                >
+                <button v-if="!editing && !timeEnd" @click="startEdit(null)"
+                    class="px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700">
                     Đặt hạn
                 </button>
 
                 <!-- Nếu có hạn thì cho chỉnh sửa -->
-                <button
-                    v-if="!editing && timeEnd"
-                    @click="startEdit(timeEnd)"
-                    class="px-3 py-1 text-sm text-white bg-gray-600 rounded hover:bg-gray-700"
-                >
+                <button v-if="!editing && timeEnd" @click="startEdit(timeEnd)"
+                    class="px-3 py-1 text-sm text-white bg-gray-600 rounded hover:bg-gray-700">
                     Chỉnh sửa
                 </button>
             </div>
@@ -120,19 +98,12 @@ const removeTime = () => {
 
         <!-- Danh sách xe -->
         <div v-if="cars.length" class="grid grid-cols-1 gap-4">
-            <div
-                v-for="(car, index) in cars"
-                :key="index"
-                class="p-4 bg-white border rounded shadow-sm"
-            >
+            <div v-for="(car, index) in cars" :key="index" class="p-4 bg-white border rounded shadow-sm">
                 <h2 class="text-lg font-semibold text-blue-600">
                     Biển số: {{ car.plate }}
                 </h2>
                 <ul class="mt-2 space-y-1 text-sm">
-                    <li><strong>Cảnh báo:</strong> {{ car.canhbao ?? "NULL" }}</li>
-                    <li><strong>Thời gian vào:</strong> {{ car.timestamp ?? "NULL" }}</li>
-                    <li><strong>Hết hạn:</strong> {{ car.timeExpired ?? "NULL" }}</li>
-                    <li><strong>Trạng thái:</strong> {{ car.trangthai ?? "NULL" }}</li>
+                    <li><strong>Thời gian vào:</strong> {{ car.timestamp ?? "--" }}</li>
                 </ul>
             </div>
         </div>
@@ -140,19 +111,13 @@ const removeTime = () => {
 
         <!-- Pagination -->
         <div class="flex items-center justify-center mt-6 space-x-4">
-            <button
-                @click="onPrev"
-                :disabled="currentPage === 1"
-                class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-            >
+            <button @click="onPrev" :disabled="currentPage === 1"
+                class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50">
                 Trước
             </button>
             <span>Trang {{ currentPage }} / {{ totalPages }}</span>
-            <button
-                @click="onNext"
-                :disabled="currentPage === totalPages"
-                class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-            >
+            <button @click="onNext" :disabled="currentPage === totalPages"
+                class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50">
                 Sau
             </button>
         </div>
