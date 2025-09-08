@@ -63,6 +63,7 @@ function formatDate(dateStr: string): string {
             title="Danh sách xe máy"
             vehicle-type="motorbike"
             :vehicles="parkingRecord.motorbikes"
+            :parking-date="parkingRecord.date"
             color="bg-blue-500 hover:bg-blue-600"
             @detail="goToDetail"
           />
@@ -71,6 +72,7 @@ function formatDate(dateStr: string): string {
             title="Danh sách ô tô"
             vehicle-type="car"
             :vehicles="parkingRecord.cars"
+            :parking-date="parkingRecord.date"
             color="bg-blue-500 hover:bg-blue-600"
             @detail="goToDetail"
           />
