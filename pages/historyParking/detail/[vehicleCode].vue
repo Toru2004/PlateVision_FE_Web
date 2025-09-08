@@ -43,14 +43,6 @@
 
                         <!-- Nội dung card -->
                         <div class="bg-white p-5 rounded-xl shadow border border-gray-100">
-                            <!-- Header -->
-                            <div class="flex justify-between items-center mb-3">
-                                <span class="text-sm text-gray-500">ID: {{ item.id }}</span>
-                                <span class="text-xs bg-gray-100 px-2 py-1 rounded">
-                                    {{ vehicleTypeTitle }}
-                                </span>
-                            </div>
-
                             <!-- Giờ -->
                             <div class="grid grid-cols-2 gap-4 text-sm text-gray-700 mb-4">
                                 <p><strong>Giờ vào:</strong> {{ item.timein }}</p>
