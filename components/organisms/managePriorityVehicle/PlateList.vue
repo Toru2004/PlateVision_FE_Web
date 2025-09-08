@@ -2,10 +2,9 @@
 interface XeInfo {
     id: string;
     bienso: string;
-    image: string | null;
-    timeIn: any;
-    timeOut: any;
     uutien: boolean;
+    createdAt: number;
+    updatedAt: number;
 }
 
 defineProps<{
@@ -64,18 +63,6 @@ const emit = defineEmits([
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div v-for="xe in danhSachXe" :key="xe.id" class="border rounded-lg p-4 shadow bg-white">
                 <p class="font-bold text-lg">Biển số: {{ xe.bienso }}</p>
-
-                <img v-if="xe.image" :src="xe.image" alt="Ảnh xe" class="w-full h-40 object-cover mt-2 rounded" />
-                <div v-else class="w-full h-40 bg-gray-200 flex items-center justify-center mt-2 rounded">
-                    Không có ảnh
-                </div>
-
-                <p class="mt-2">
-                    Vào: {{ xe.timeIn?.toDate?.().toLocaleString("vi-VN") || "---" }}
-                </p>
-                <p>
-                    Ra: {{ xe.timeOut?.toDate?.().toLocaleString("vi-VN") || "---" }}
-                </p>
                 <!-- <p class="mt-1">
                     Ưu tiên:
                     <span :class="xe.uutien ? 'text-green-600 font-semibold' : 'text-gray-500'
