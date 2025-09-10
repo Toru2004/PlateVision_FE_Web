@@ -45,16 +45,22 @@ async function fetchAndUpdateXeRaVaoHomNay() {
 
     for (const ngayDoc of lichSuDocs.docs) {
         const ngayId = ngayDoc.id;
-        const xeRef = collection(db, "lichsuhoatdong", ngayId, "xe");
-        const xeDocs = await getDocs(xeRef);
 
-        for (const xeDoc of xeDocs.docs) {
-            const data = xeDoc.data();
-            const vao = data.solanvao || 0;
-            const ra = data.solanra || 0;
+        // Gom chung 2 loại phương tiện
+        const loaiXeList = ["xemay", "xeoto"];
 
-            if (ngayId === ngayHomNay && (vao > 0 || ra > 0)) {
-                demRaVaoHomNay++;
+        for (const loai of loaiXeList) {
+            const xeRef = collection(db, "lichsuhoatdong", ngayId, loai);
+            const xeDocs = await getDocs(xeRef);
+
+            for (const xeDoc of xeDocs.docs) {
+                const data = xeDoc.data();
+                const vao = data.solanvao || 0;
+                const ra = data.solanra || 0;
+
+                if (ngayId === ngayHomNay && (vao > 0 || ra > 0)) {
+                    demRaVaoHomNay++;
+                }
             }
         }
     }
