@@ -6,7 +6,9 @@ import Infomation from "@/components/organisms/dashboard/Infomation.vue";
 import { getDatabase, ref as rtdbRef, onValue, off } from "firebase/database";
 
 const db = getFirestore(firebaseApp);
-const xeHienTai = ref<number>(0);
+const rtdb = getDatabase(firebaseApp);
+
+const xeHienTai = ref<number>(0); 
 const xeRaVaoHomNay = ref<number>(0);
 const soNguoiDangKy = ref<number>(0);
 const tongYeuCau = ref<number>(0);
@@ -28,17 +30,16 @@ let unsubscribeListeners: (() => void)[] = [];
 function getTodayId(): string {
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
-    const mm = String(today.getMonth() + 1).padStart(2, "0"); // Tháng bắt đầu từ 0
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
     const yyyy = today.getFullYear();
     return `${dd}${mm}${yyyy}`;
 }
 
-// Hàm đếm xe đang gửi hôm nay
-async function fetchAndUpdateXeCount() {
+// Đếm xe ra vào hôm nay (vẫn từ Firestore)
+async function fetchAndUpdateXeRaVaoHomNay() {
     const lichSuRef = collection(db, "lichsuhoatdong");
     const lichSuDocs = await getDocs(lichSuRef);
 
-    const bienSoMap = new Map<string, { solanvao: number; solanra: number }>();
     const ngayHomNay = getTodayId();
     let demRaVaoHomNay = 0;
 
@@ -48,61 +49,56 @@ async function fetchAndUpdateXeCount() {
         const xeDocs = await getDocs(xeRef);
 
         for (const xeDoc of xeDocs.docs) {
-            const bienSo = xeDoc.id;
             const data = xeDoc.data();
-
             const vao = data.solanvao || 0;
             const ra = data.solanra || 0;
 
-            // Cộng dồn số lần vào ra theo từng ngày
-            if (bienSoMap.has(bienSo)) {
-                const current = bienSoMap.get(bienSo)!;
-                bienSoMap.set(bienSo, {
-                    solanvao: current.solanvao + vao,
-                    solanra: current.solanra + ra,
-                });
-            } else {
-                bienSoMap.set(bienSo, {
-                    solanvao: vao,
-                    solanra: ra,
-                });
-            }
-            // Nếu ngày hiện tại và xe có hoạt động → đếm vào thống kê hôm nay
             if (ngayId === ngayHomNay && (vao > 0 || ra > 0)) {
                 demRaVaoHomNay++;
             }
         }
     }
 
-    let count = 0;
-    for (const { solanvao, solanra } of bienSoMap.values()) {
-        if (solanvao > solanra) {
-            count++;
-        }
-    }
+    deltaXeRaVao.value =
+        lastXeRaVaoHomNay.value !== null
+            ? demRaVaoHomNay - lastXeRaVaoHomNay.value
+            : 0;
 
-    deltaXeHienTai.value = lastXeHienTai.value !== null ? count - lastXeHienTai.value : 0;
-    deltaXeRaVao.value = lastXeRaVaoHomNay.value !== null ? demRaVaoHomNay - lastXeRaVaoHomNay.value : 0;
-
-    lastXeHienTai.value = count;
     lastXeRaVaoHomNay.value = demRaVaoHomNay;
-
-    xeHienTai.value = count;
     xeRaVaoHomNay.value = demRaVaoHomNay;
 }
 
-// Lắng nghe thay đổi trong timeline của từng xe trong ngày hôm nay
-async function setupRealtimeListener() {
+// Lắng nghe realtime số xe trong bãi từ RTDB
+function listenXeHienTai() {
+    const bienSoRef = rtdbRef(rtdb, "biensotrongbai");
+    const unsub = onValue(bienSoRef, (snapshot) => {
+        let count = 0;
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            count = Object.keys(data).length;
+        }
+
+        deltaXeHienTai.value =
+            lastXeHienTai.value !== null ? count - lastXeHienTai.value : 0;
+
+        lastXeHienTai.value = count;
+        xeHienTai.value = count;
+    });
+
+    unsubscribeListeners.push(() => off(bienSoRef));
+}
+
+function setupRealtimeListener() {
     const ngayId = getTodayId();
     const xeRef = collection(db, "lichsuhoatdong", ngayId, "xe");
 
     const unsub = onSnapshot(xeRef, async () => {
-        await fetchAndUpdateXeCount();
+        await fetchAndUpdateXeRaVaoHomNay();
     });
 
     unsubscribeListeners.push(unsub);
 
-    await fetchAndUpdateXeCount();
+    fetchAndUpdateXeRaVaoHomNay();
 }
 
 function listenSoNguoiDangKy() {
@@ -132,29 +128,15 @@ function listenTongYeuCau() {
 async function listenTongLuotCongHoatDongRealtime() {
     const lichSuRef = collection(db, "lichsuhoatdong");
 
-    // Lắng nghe tất cả ngày
     const unsubLichSu = onSnapshot(lichSuRef, (ngaySnapshot) => {
-        // Hủy đăng ký cũ để tránh leak
         unsubscribeXeListeners.forEach((unsub) => unsub());
         unsubscribeXeListeners.length = 0;
 
-        // Duyệt qua từng ngày
         ngaySnapshot.docs.forEach((ngayDoc) => {
             const ngayId = ngayDoc.id;
             const xeRef = collection(db, "lichsuhoatdong", ngayId, "xe");
 
-            // Lắng nghe từng collection 'xe' của ngày
-            const unsubXe = onSnapshot(xeRef, (xeSnapshot) => {
-                let total = 0;
-                xeSnapshot.docs.forEach((xeDoc) => {
-                    const data = xeDoc.data();
-                    const vao = data.solanvao || 0;
-                    const ra = data.solanra || 0;
-                    total += vao + ra;
-                });
-
-                // Vì bạn lắng nghe theo từng ngày, bạn cần cộng dồn theo nhiều ngày
-                // => Giải pháp đơn giản: gom toàn bộ số ngày rồi tính tổng
+            const unsubXe = onSnapshot(xeRef, () => {
                 recomputeTongLuotCongHoatDong();
             });
 
@@ -165,7 +147,6 @@ async function listenTongLuotCongHoatDongRealtime() {
     unsubscribeListeners.push(unsubLichSu);
 }
 
-// Gom lại toàn bộ lượt cổng từ các ngày và xe
 async function recomputeTongLuotCongHoatDong() {
     const lichSuRef = collection(db, "lichsuhoatdong");
     const lichSuDocs = await getDocs(lichSuRef);
@@ -189,19 +170,18 @@ async function recomputeTongLuotCongHoatDong() {
 }
 
 function listenTrangThaiCong() {
-    const db = getDatabase();
-    const congRef = rtdbRef(db, "trangthaicong");
+    const congRef = rtdbRef(rtdb, "trangthaicong");
 
     const unsub = onValue(congRef, (snapshot) => {
         trangThaiCong.value = snapshot.val();
     });
 
-    // Push vào danh sách để unmount xóa listener nếu cần
     unsubscribeListeners.push(() => off(congRef));
 }
 
 onMounted(() => {
-    setupRealtimeListener();
+    listenXeHienTai();          // cập nhật từ biensotrongbai (RTDB)
+    setupRealtimeListener();    // cập nhật ra/vào hôm nay (Firestore)
     listenSoNguoiDangKy();
     listenTongYeuCau();
     listenTongLuotCongHoatDongRealtime();
