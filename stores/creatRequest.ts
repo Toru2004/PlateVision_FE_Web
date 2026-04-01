@@ -1,9 +1,11 @@
 import { collection, addDoc, type Firestore, getDocs, doc, updateDoc } from "firebase/firestore";
+import{getDatabase,ref, update} from "firebase/database"
 import type { FirebaseApp } from "firebase/app";
 import { Timestamp, onSnapshot } from "firebase/firestore";
 
-const { $firestore } = useNuxtApp();
+const { $firestore, $firebaseApp } = useNuxtApp();
 const db = $firestore as Firestore;
+const rtdb=getDatabase($firebaseApp as FirebaseApp);
 export async function saveRequestFireBase(lines: string[], approve: boolean) {
   try {
     // Tạo object lưu trữ dữ liệu
@@ -47,9 +49,22 @@ export async function editStatus(RequestPort: boolean) {
       AutoOpen: !RequestPort,
       timeport: firestoreTimestamp
     });
+    await updateRealTimeDB(!RequestPort);
     console.log("Cập nhật thành công document ID:", docSnapshot.id);
   } catch (error) {
     console.error("Lỗi khi cập nhật document:", error);
+  }
+}
+
+export async function updateRealTimeDB(autoOpen:boolean){
+  try{
+    const dbRef=ref(rtdb);
+    await update(dbRef,{
+      AutoOpen:autoOpen
+    });
+    console.log("da cap nhat realtime autoopen")
+  }catch(e){
+    console.error(e)
   }
 }
 export async function getStatus() {

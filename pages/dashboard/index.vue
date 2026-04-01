@@ -161,10 +161,20 @@ async function recomputeTongLuotCongHoatDong() {
 
     for (const ngayDoc of lichSuDocs.docs) {
         const ngayId = ngayDoc.id;
-        const xeRef = collection(db, "lichsuhoatdong", ngayId, "xe");
-        const xeDocs = await getDocs(xeRef);
+        const xeMayRef = collection(db, "lichsuhoatdong", ngayId, "xemay");
+        const xeMayDocs = await getDocs(xeMayRef);
 
-        for (const xeDoc of xeDocs.docs) {
+        for (const xeDoc of xeMayDocs.docs) {
+            const data = xeDoc.data();
+            const vao = data.solanvao || 0;
+            const ra = data.solanra || 0;
+            total += vao + ra;
+        }
+
+        const xeOtoRef = collection(db, "lichsuhoatdong", ngayId, "xeoto");
+        const xeOtoDocs = await getDocs(xeOtoRef);
+
+        for (const xeDoc of xeOtoDocs.docs) {
             const data = xeDoc.data();
             const vao = data.solanvao || 0;
             const ra = data.solanra || 0;
